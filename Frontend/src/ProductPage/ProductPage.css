@@ -1,0 +1,110 @@
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 3 products per row */
+    gap: 20px; /* Space between each product */
+    padding: 20px;
+    margin: 0 auto; /* Center the grid */
+    max-width: 1200px; /* Adjust the maximum width for the container */
+}
+
+.product-card {
+    border: 5px solid #ddd; 
+    padding: 20px; /* Space inside the product card */
+    text-align: center; /* Center text and content */
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-radius: 8px; /* Slight rounding of corners */
+    background-color: white; /* White background for each product card */
+    transition: transform 0.2s, box-shadow 0.2s; /* Add hover effects */
+}
+
+.product-card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+.product-card img {
+    width: 130px;
+    height: 130px;
+    object-fit: cover; /* Ensure images fit well inside the box */
+    border-radius: 4px; /* Slight rounding on image corners */
+    margin-bottom: 10px; /* Space between image and text */
+}
+
+.product-card h2 {
+    font-size: 1.5rem;
+    margin: 10px 0;
+}
+
+.product-card p {
+    font-size: 0.9rem;
+    margin: 5px 0;
+    color: #555; /* Slightly lighter text for descriptions */
+}
+
+.product-card .price {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+
+
+.product-card .image-navigation button:hover {
+    color: #007bff; /* Button color change on hover */
+}
+
+
+
+  .product-card a {
+    text-decoration: none; /* Remove the underline */
+    color: inherit; /* Inherit the color from the parent element */
+}
+
+.product-card a:hover {
+    color: #007bff; /* Change color on hover if needed */
+}
+
+
+
+
+
+
+  .search_bar {
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;/* Optionally, centers vertically if needed */
+}
+
+
+
+.category-filter {
+    display: flex;
+    justify-content: center; 
+    gap: 10px;
+    margin-bottom: 20px; 
+}
+
+/* Basic button styling */
+.category-filter button {
+    background-color: #f0d071; /* Light background for default state */
+    border: 1px solid #1e50a2; /* Light border */
+    color: #1e50a2;
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px; /* Add padding to buttons */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Show pointer on hover */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
+}
+
+/* Hover effect for buttons */
+.category-filter button:hover {
+    background-color: #faca1c; /* Darken the background slightly on hover */
+}
+
+/* Active state for the selected category */
+.category-filter button.active {
+    background-color: #1e50a2; /* Green background for active state */
+    color: #f0d071; /* White text for contrast */
+    border: 1px solid #1e50a2; /* Match the border color to the background */
+}

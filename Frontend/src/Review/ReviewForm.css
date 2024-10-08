@@ -1,0 +1,66 @@
+.review-form-container {
+    
+    max-width: 500px;
+    margin: 100px auto;
+    text-align: center;
+  }
+  
+  .review-form-container h2 {
+    margin-bottom: 20px;
+  }
+  
+  .review-form-container form label {
+    font-size: 20px;
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .review-form-container .stars {
+    margin-bottom: 20px;
+  }
+  
+  .review-form-container .stars span {
+    cursor: pointer;
+    font-size: 40px;
+    margin-right: 5px;
+    color: rgba(128, 128, 128, 0.395);
+    transition: color 0.2s ease;
+  }
+  
+  .review-form-container .stars span.gold {
+    color: #ffd401;
+  }
+  
+  .review-form-container .stars span.hovered {
+    color: #ffd401;
+  }
+  
+  .review-form-container textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .review-form-container button {
+    padding: 10px 20px;
+    background-color: #1e50a2;
+    color: #ffd401;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .review-form-container button:hover {
+    background-color: #ffd401;
+    color: #1e50a2;
+  }
+  
+  .review-form-container p {
+    margin-top: 20px;
+    font-size: 17px;
+    color: #1e50a2;
+  }
+  

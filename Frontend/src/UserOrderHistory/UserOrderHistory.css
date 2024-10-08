@@ -1,0 +1,85 @@
+a {
+    text-decoration: none;
+    color: inherit; /* Keep the text color same as the parent */
+  }
+  
+  a:hover {
+    text-decoration: none;
+  }
+  
+  .order-history-container {
+    margin: 80px 30px 40px 30px;
+    padding: 20px;
+  }
+  
+  h2 {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #1e50a2;
+  }
+
+  h3{
+    color: #1e50a2;
+    font-weight: bold;
+  }
+
+  
+
+
+  
+  .order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Gap between order cards */
+  }
+  
+  .order-card {
+    border: 1px solid #ccc;
+    padding: 20px; /* Increased padding for better spacing */
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    transition: box-shadow 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effects */
+    display: flex;
+    flex-direction: column; /* Column layout for card items */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for card */
+  }
+  
+  .order-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+    transform: scale(1.02); /* Slightly scale up the entire card */
+  }
+  
+  .order-card h4 {
+    margin: 0;
+    font-size: 1.5rem; /* Increased font size for order ID */
+    font-weight: bold; /* Bold for emphasis */
+  }
+  
+  .order-card h4:hover {
+    color: #1e50a2;
+  }
+  
+  .order-card p {
+    margin: 5px 0; /* Margin for paragraphs for better spacing */
+  }
+  
+   .order-info {
+    display: flex;
+    justify-content: space-between; /* Distribute space evenly */
+    margin-top: 10px; /* Add some margin above */
+    
+  }
+   .info-item {
+    display: flex;
+    flex-direction: column; /* Stack titles and values vertically */
+    align-items: center; /* Align items to the start */
+    flex: 1; /* Allow items to grow */
+  }
+  
+  .info-item p {
+    margin: 0; /* Reset margin */
+    text-align: center;
+  }
+  

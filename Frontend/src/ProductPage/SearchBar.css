@@ -1,0 +1,27 @@
+.box{
+    margin-top: 80px;
+}
+
+/* From Uiverse.io by alexruix */ 
+.input {
+    width: 250px;
+    background-color: #e8e8e8;
+    color: #242424;
+    padding: .15rem .5rem;
+    min-height: 40px;
+    border-radius: 4px;
+    outline: none;
+    border: none;
+    line-height: 1.15;
+    box-shadow: 0px 10px 20px -18px;
+    margin-bottom: 20px;
+  }
+  
+  input:focus {
+    border-bottom: 2px solid #1e50a2;
+    border-radius: 4px 4px 2px 2px;
+  }
+  
+  input:hover {
+    outline: 1px solid lightgrey;
+  }

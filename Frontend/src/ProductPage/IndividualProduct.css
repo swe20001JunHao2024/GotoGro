@@ -1,0 +1,200 @@
+h1{
+    font-size: 50px;
+    color: #006657;
+    margin-bottom: 30px;
+}
+
+.product-detail {
+    padding: 20px; /* Add padding to the entire product detail section */
+    margin: 100px 30px; /* Add margin around the product detail section */
+    border-radius: 10px; /* Optional: rounded corners for the entire section */
+    background: #fff; /* Optional: background color */
+
+}
+.product-layout {
+    display: flex; /* Use flexbox for horizontal layout */
+    gap: 20px; /* Space between carousel and product data */
+    margin: 20px 0;
+}
+
+
+.carousel-box {
+    max-width: 600px; /* Set the maximum width of the carousel */
+    margin: 0 auto; /* Center it horizontally */
+    position: relative; /* Ensure it's contained within this width */
+    padding: 30px;
+    background: white; /* Optional: add background color for contrast */
+    overflow: hidden;
+    
+}
+.carousel-box:before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border: 10px solid transparent; /* Border thickness */
+    border-image: linear-gradient(135deg, #006657, #009688) 1; /* Gradient border */
+    border-radius: 15px; /* Rounded corners */
+    z-index: -1; /* Send to back */
+    transition: transform 0.3s ease; /* Transition for hover effect */
+}
+.product-data {
+    flex: 1; /* Take up remaining space */
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center vertically */
+    padding: 20px; /* Add padding */
+    border: 1px solid #ccc; /* Optional border */
+    border-radius: 10px; /* Optional rounded corners */
+    background: #f9f9f9; /* Optional light background color */
+    
+}
+
+/* Hover effect to create a 'pulse' effect */
+.carousel-box:hover:before {
+    transform: scale(1.05); /* Slightly scale up on hover */
+}
+/* Carousel item images */
+.carousel-box img {
+    width: 100%; /* Ensure images fit the container width */
+    height: 100%; /* Adjust the height as desired */
+    object-fit: cover; /* Maintain image aspect ratio */
+}
+
+/* Slick slider adjustments to prevent full width */
+
+
+.slick-list {
+    padding: 0; /* Remove extra padding added by slick */
+}
+
+.slick-track {
+    display: flex;
+    justify-content: center; /* Center the slides if needed */
+}
+/* Custom arrow styles */
+.slick-prev,
+.slick-next {
+    width: 40px !important;
+    height: 40px !important;
+    z-index: 1 !important;
+    background-color: transparent !important; /* Make the background transparent */
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    cursor: pointer !important;
+    opacity: 0.75 !important; /* Semi-transparent */
+}
+
+/* Custom left arrow using your own image */
+.slick-prev {
+    left: 10px !important;  /* Adjust distance from the left */
+    background-image: url('../assets/arrow-left.png') !important; /* Use your left chevron image */
+    background-size: contain !important; /* Make sure the image fits the arrow box */
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    border: solid;
+}
+
+
+/* Custom right arrow using your own image */
+.slick-next {
+    right: 10px !important;  /* Adjust distance from the right */
+    background-image: url('../assets/arrow-right.png') !important; /* Use your right chevron image */
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+}
+
+
+.slick-prev:before,
+.slick-next:before {
+    content: none !important;
+}
+
+
+.slick-prev:hover,
+.slick-next:hover {
+    opacity: 1; 
+    transform: scale(1.1); 
+}
+
+
+/* Specific styles for the Add to Cart button */
+.add-to-cart-button {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background: #183153;
+    font-family: "Montserrat", sans-serif;
+    box-shadow: 0px 6px 24px 0px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    cursor: pointer;
+    border: none;
+    margin-top: 20px;
+    width: 200px;
+    height: 30px;
+}
+
+.add-to-cart-button:after {
+    content: " ";
+    width: 0%;
+    height: 100%;
+    background: #ffd401;
+    position: absolute;
+    transition: all 0.4s ease-in-out;
+    right: 0;
+}
+
+.add-to-cart-button:hover::after {
+    right: auto;
+    left: 0;
+    width: 100%;
+}
+
+.add-to-cart-button span {
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+    padding: 18px 25px;
+    color: #fff;
+    font-size: 1.125em;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    z-index: 20;
+    transition: all 0.3s ease-in-out;
+}
+
+.add-to-cart-button:hover span {
+    color: #183153;
+    animation: scaleUp 0.3s ease-in-out;
+}
+
+@keyframes scaleUp {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(0.95);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+  .out-of-stock-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background: #ccc; /* Grey background for disabled state */
+    color: #666; /* Grey text for disabled state */
+    font-family: "Montserrat", sans-serif;
+    cursor: not-allowed; /* Cursor to indicate not allowed */
+    border: none;
+    padding: 10px 20px; /* Padding for the button */
+    width: 200px; /* Set width to match Add to Cart button */
+}

@@ -1,0 +1,67 @@
+.update-profile-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin: 10px auto;
+    max-width: 600px;
+    text-align: center; /* Center the content */
+}
+
+.update-profile-header {
+    color: #1e50a2;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.profile-image {
+    border-radius: 50%;
+    margin-bottom: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 150px; /* Adjust the size as needed */
+    height: 150px; /* Adjust the size as needed */
+}
+
+.label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+.input-field:focus {
+    border-color: #1e50a2;
+    outline: none;
+}
+
+.submit-button {
+    background-color: #1e50a2;
+    color: #ffdb59;
+    padding: 10px 20px; /* Adjust padding to make the button look balanced */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: block;
+    margin: 0 auto; /* Center the button horizontally */
+}
+
+.submit-button:hover {
+    background-color: #ffdb59;
+    color: #1e50a2;
+}
+
+.error-message {
+    color: red;
+    margin: 10px 0;
+}
