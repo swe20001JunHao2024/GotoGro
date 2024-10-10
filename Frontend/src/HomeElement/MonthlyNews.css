@@ -1,0 +1,61 @@
+.News-container {
+    display: block;
+    height: 120vh; /* Set to full viewport height */
+    width: 100%;
+    background-color: #decdbb;
+    overflow: hidden; /* Prevent overflow */
+}
+
+.Title {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
+    width: 100%;
+}
+
+.Title p {
+    font-family: "Modak", system-ui;
+    font-weight: 400;
+    font-style: normal;  
+    color: rgb(225, 225, 225);
+    font-size: 120px;
+    text-align: center;
+    margin: 0;
+}
+
+/* Styles for the carousel */
+.carousel {
+    width: 100%; /* Full width */
+}
+
+.carousel-item {
+    height: 90vh; /* Adjust height to a percentage of the viewport */
+    position: relative; /* Allow absolute positioning of caption */
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%; /* Ensure the image takes full height */
+    object-fit: cover; /* Ensure the image covers the entire area */
+}
+
+.carousel-caption {
+    position: absolute; /* Change to absolute positioning */
+    bottom: 20px; /* Position from the bottom */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust to center */
+    color: white; /* Change text color for better visibility */
+    z-index: 2; /* Bring captions above the blurred background */
+    text-align: center; /* Center the text */
+}
+
+.carousel-caption h3 {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0; /* Remove default margin */
+}
+
+.carousel-caption p {
+    font-size: 16px;
+    margin: 0; /* Remove default margin */
+}

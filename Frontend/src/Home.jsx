@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import Nav from "./NavBar/Nav"
 import Hero from './HomeElement/Hero.jsx'
 import Reviews from './Review/Review'
+import About from './HomeElement/AboutSection.jsx'
+import MonthlyNews from './HomeElement/MonthlyNews.jsx';
+
 
 
 function Home() {
@@ -30,6 +33,8 @@ function Home() {
     <div>
         <Nav/>
         <Hero/>
+        <About/>
+        <MonthlyNews/>
         <Reviews/>
         
     </div>

@@ -18,6 +18,7 @@ import Cart from './Cart/Cart.jsx'
 import UserOrderHistory from './UserOrderHistory/UserOrderHistory.jsx'
 import UserOrderHistoryItem from './UserOrderHistory/UserOrderHistoryItem.jsx'
 import ReviewForm from './Review/ReviewForm.jsx';
+import AddNews from './AdminPanel/UploadNews/AddNews.jsx'
 
 
 
@@ -47,7 +48,7 @@ root.render(
           <Route path="/userOrderHistory" element={<UserOrderHistory />} />
           <Route path="/userOrderHistory/:orderId" element={<UserOrderHistoryItem />} />
           <Route path="/review" element={<ReviewForm />} />
-
+          <Route path="/addNews" element={<AddNews />} />
           <Route
             path="/category"
             element={

@@ -8,6 +8,17 @@
     justify-content: space-between; 
     position: relative;
     overflow: hidden;
+    padding-bottom: 30px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .header {
@@ -22,7 +33,20 @@
     font-size: 120px;
     margin: 0; 
     padding: 50px 0px 0px 0px;
+    animation: slideInDown 1s ease-in-out;
 }
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-100px); /* Start above the page */
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0); /* End at normal position */
+        opacity: 1;
+    }
+}
+
 
 .Hero-text p {
     font-family: "Modak", system-ui;
@@ -45,7 +69,22 @@
     z-index: 1;
     font-size: large; /* Adjust font size if needed */
     display: block;
+    animation: fadeInUp 1.5s ease-in-out;
 }
+
+@keyframes fadeInUp {
+    from {
+        transform: translateY(50px); /* Start from below */
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0); /* End at normal position */
+        opacity: 1;
+    }
+}
+
+
+
 
 .Welcome-text p{
     font-size: large;
@@ -62,6 +101,18 @@
     transform: translate(-50%, -50%); 
     z-index: 2; /* Ensure the image is on top */
     display: flex;
+    
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.5); /* Start small */
+        opacity: 0;
+    }
+    to {
+        transform: scale(1); /* End at normal size */
+        opacity: 1;
+    }
 }
 
 .center-image img {
@@ -72,7 +123,9 @@
 
 .shop img{
     margin-top: 20px;
-    width: 450px; /* Set a specific width */
-    height: 550px;
+    margin-bottom: 30px;
+    width: 500px; /* Set a specific width */
+    height: 600px;
     object-fit: contain;
+    
 }

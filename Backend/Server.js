@@ -1016,16 +1016,46 @@ app.get('/reviews', (req, res) => {
     });
   });
   
+//news
+const newsstorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'uploads/news/');
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + path.extname(file.originalname)); // Ensure unique filenames
+    }
+});
+const newsupload = multer({ storage: newsstorage });
+app.post('/news', newsupload.single('news_img'), (req, res) => {
+    const { news_title, news_des, news_s_date, news_e_date } = req.body;
+    const news_img = req.file ? `http://localhost:8081/uploads/news/${req.file.filename}` : null; // Create full URL for the image
   
+    const sql = 'INSERT INTO news (news_title, news_des, news_img, news_s_date, news_e_date) VALUES (?, ?, ?, ?, ?)';
+    db.query(sql, [news_title, news_des, news_img, news_s_date, news_e_date], (err, result) => {
+      if (err) {
+        console.error('Error inserting news:', err);
+        return res.status(500).json({ message: 'Failed to add news' });
+      }
+      res.status(200).json({ message: 'News added successfully!' });
+    });
+  });
+app.use('/uploads/news', express.static('uploads/news'));
 
-
-
-
-
-
-
-
-
+app.get('/news', (req, res) => {
+    // Get the current date
+    const currentDate = new Date();
+  
+    // Construct the SQL query
+    const sql = 'SELECT * FROM news WHERE news_s_date <= ? AND news_e_date >= ?';
+    db.query(sql, [currentDate, currentDate], (err, results) => {
+      if (err) {
+        console.error('Error fetching news:', err);
+        return res.status(500).json({ message: 'Failed to fetch news.' });
+      }
+      res.status(200).json(results); // Send the results back to the client
+    });
+  });
+  
 
 
 
