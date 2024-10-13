@@ -21,23 +21,25 @@ const ReviewForm = () => {
     setMessage('');
   
     try {
-      const token = localStorage.getItem('token'); // Assuming you're storing the JWT token in localStorage
+      const token = localStorage.getItem('token');
   
       const response = await axios.post(
-        '/reviews', // This should match the backend route
+        '/reviews',
         { rating, review },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Attach the JWT token for authentication
+            Authorization: `Bearer ${token}`,
           },
         }
       );
+  
+      // You can use the response if needed (e.g., log it or use response data)
+      console.log('Review Response:', response.data);
   
       setMessage('Review submitted successfully!');
       setRating(0);
       setReview('');
     } catch (error) {
-      // Error handling
       if (error.response) {
         setMessage(error.response.data.message);
       } else {

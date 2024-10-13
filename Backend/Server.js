@@ -1016,6 +1016,27 @@ app.get('/reviews', (req, res) => {
     });
   });
   
+
+app.post('/reviews', verify, (req, res) => {
+    const { rating, review } = req.body;
+    const userId = req.user.id; // Assuming the JWT contains the user ID
+  
+    if (!rating || !review) {
+      return res.status(400).json({ message: 'Rating and review are required' });
+    }
+  
+    const sql = 'INSERT INTO review (UserID, rating, review) VALUES (?, ?, ?)';
+    db.query(sql, [userId, rating, review], (err, result) => {
+      if (err) {
+        console.error('Error inserting review:', err);
+        return res.status(500).json({ message: 'Error submitting review' });
+      }
+      res.status(201).json({ message: 'Review submitted successfully' });
+    });
+  });
+
+
+
 //news
 const newsstorage = multer.diskStorage({
     destination: (req, file, cb) => {

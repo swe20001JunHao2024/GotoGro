@@ -1,0 +1,103 @@
+/* Marquee styling */
+.marquee {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background-color: #f9f9f9;
+  padding: 20px 0;
+}
+
+.marquee-inner {
+  display: flex;
+  gap: 20px; /* Space between review cards */
+  animation: scroll 20s linear infinite;
+  padding: 20px;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.marquee-inner:hover {
+  animation-play-state: paused;
+}
+
+/* Review card styling */
+.review-card {
+  width: 220px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.review-card:hover {
+  transform: translateY(-10px); /* Slight lift on hover */
+}
+
+/* Profile picture styling */
+.profile-pic {
+  width: 90px;
+  height: 90px;
+  border-radius: 15px;
+  border: 2px solid #eee;
+  object-fit: cover;
+  margin: 30px;
+}
+
+/* Review header */
+.review-header span {
+  font-weight: bold;
+  color: #333;
+  font-size: 1.1em;
+  margin-top: 5px;
+}
+
+/* Rating stars */
+.rating {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.rating svg {
+  width: 20px;
+  height: 20px;
+  fill: #f4ad4f; /* Gold star color */
+}
+
+/* Review content */
+.review-content p {
+  font-size: 0.9em;
+  color: #555;
+  margin: 0;
+  line-height: 1.4;
+  word-break: break-word;
+  max-height: 60px; /* Limit the review text height */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Ellipsis if the text overflows */
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .marquee-inner {
+    flex-direction: column;
+    animation: none; /* Disable marquee animation on smaller screens */
+  }
+  
+  .review-card {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+}

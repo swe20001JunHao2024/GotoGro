@@ -1,7 +1,7 @@
 // src/components/Marquee.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Review.scss';
+import './Review.css';
 import DefaultProfilePic from '../assets/Default_profpic.jpg';
 import Star from './Star'; // Import the Star component
 
@@ -30,7 +30,7 @@ const Marquee = () => {
               alt={`${review.Username}'s profile`} 
               className="profile-pic"
             />
-            <h4>{review.Username}</h4> {/* Moved here for alignment */}
+            <span>{review.Username}</span> {/* Moved here for alignment */}
           </div>
           <div className="review-content">
             <div className="rating">

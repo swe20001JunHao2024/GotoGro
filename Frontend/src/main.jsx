@@ -19,7 +19,7 @@ import UserOrderHistory from './UserOrderHistory/UserOrderHistory.jsx'
 import UserOrderHistoryItem from './UserOrderHistory/UserOrderHistoryItem.jsx'
 import ReviewForm from './Review/ReviewForm.jsx';
 import AddNews from './AdminPanel/UploadNews/AddNews.jsx'
-
+import ReviewTest from './Review/ReviewTest.jsx';
 
 
 
@@ -49,6 +49,7 @@ root.render(
           <Route path="/userOrderHistory/:orderId" element={<UserOrderHistoryItem />} />
           <Route path="/review" element={<ReviewForm />} />
           <Route path="/addNews" element={<AddNews />} />
+          <Route path="/rev" element={<ReviewTest/>} />
           <Route
             path="/category"
             element={
