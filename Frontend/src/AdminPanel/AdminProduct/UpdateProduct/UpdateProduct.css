@@ -1,0 +1,60 @@
+/* General layout */
+.admin-page {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #02391e;
+    color: white;
+    padding: 20px;
+    /* Ensure it doesn't stretch too much */
+    overflow-y: auto; 
+}
+
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo {
+    max-width: 100px;
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+}
+
+.nav-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.nav-item.active, .nav-item:hover {
+    background-color: #88d17a;
+    color: black;
+}
+
+.dashboard {
+    flex-grow: 1; /* This will make it take remaining space */
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.header h1 {
+    margin-bottom: 20px;
+    color: #02391e;
+}
+
+/* Content for the update element */
+.update-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    /* Add more styles as needed */
+}
+
+/* Additional styles for cards, stock table, etc., can remain as is */

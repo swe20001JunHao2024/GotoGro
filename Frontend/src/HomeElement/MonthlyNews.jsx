@@ -37,7 +37,7 @@ const MonthlyNews = () => {
             />
             <Carousel.Caption>
               <h3>{newsItem.news_title}</h3>
-              <p>{newsItem.news_des}</p>
+              
             </Carousel.Caption>
           </Carousel.Item>
         ))}

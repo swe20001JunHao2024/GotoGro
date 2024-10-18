@@ -1,0 +1,100 @@
+.admin-product-page {
+    display: flex;
+    height: 100%;
+    
+    
+}
+
+.upload-product-page {
+    flex: 1;
+    height: 100%;
+    padding: 20px;
+    background-color: #f4f4f9;
+    margin-left: 250px; /* Adjust the left margin to push content away from the sidebar */
+    
+}
+
+.upload-product-page h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.upload-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.upload-form label {
+    font-size: 16px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.upload-form input,
+.upload-form textarea,
+.upload-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.upload-form textarea {
+    resize: vertical;
+}
+
+.upload-button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.upload-button:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 10px;
+}
+
+.success-message {
+    color: green;
+    margin-bottom: 10px;
+}
+
+.image-preview-box {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping to the next row */
+    margin: 10px 0 15px 0;
+    border: 1px solid #ccc; /* Border around the preview box */
+    padding: 10px; /* Padding inside the box */
+    border-radius: 5px; /* Rounded corners */
+    max-width: 100%; /* Ensure it doesn't overflow */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
+}
+
+.image-preview {
+    flex: 0 0 15%; /* Allow 5 images in a row */
+    height: 100px; /* Fixed height for the images */
+    object-fit: cover; /* Maintain aspect ratio while covering the area */
+    margin: 5px; /* Space between images */
+    border: 1px solid #ccc; /* Border around each image */
+    border-radius: 5px; /* Rounded corners for images */
+}
+
+@media (max-width: 600px) {
+    .image-preview {
+        flex: 0 0 45%; /* On small screens, show 2 images in a row */
+    }
+}

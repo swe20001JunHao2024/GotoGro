@@ -69,6 +69,12 @@ export default defineConfig({
         secure: false,
         rewrite: (path) => path.replace(/^\/resetPassword/, '/resetPassword')
       },
+      '/admindash': {
+        target: 'http://localhost:8081', // Your backend server URL
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/review/, '/review')
+      },
     }
   },
 

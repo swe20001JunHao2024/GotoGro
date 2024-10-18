@@ -12,19 +12,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-
-
-
-
-
-
-
 app.use(cors({
     origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true 
 }));
+
+
 
 
 const storage = multer.diskStorage({
@@ -46,15 +41,6 @@ const db = mysql.createConnection({
     password: '',
     database: 'test'
 });
-
-
-const signToken = (user) => {
-    const payload = {
-        id: user.id,
-    };
-
-    return jwt.sign(payload, SECRET_KEY, { expiresIn: '1d' });
-};
 
 
 
@@ -289,9 +275,6 @@ app.get('/protected-route', (req, res) => {
 });
 
 
-
-
-
 //used
 app.get('/profile', verify, (req, res) => {
     console.log('Request User:', req.user); // Log req.user
@@ -399,7 +382,7 @@ app.post('/logins', (req, res) => {
             }
 
             // If the password matches, create a token and send the response
-            const accesstoken = jwt.sign({ id: user.UserID }, SECRET_KEY);
+            const accesstoken = jwt.sign({ id: user.UserID , isAdmin: false }, SECRET_KEY,  { expiresIn: '1d' });
             const response = {
                 id: user.UserID,
                 email: user.UserEmail,
@@ -412,9 +395,6 @@ app.post('/logins', (req, res) => {
         });
     });
 });
-
-
-
 
 app.post('/upload-profile-pic', upload.single('profilePic'), (req, res) => {
     const userId = req.body.userId;
@@ -436,7 +416,7 @@ app.post('/upload-profile-pic', upload.single('profilePic'), (req, res) => {
 
 //get product to product page
 app.get('/products', (req, res) => {
-    const query = 'SELECT * FROM product WHERE ProductStatus = "posted"';
+    const query = 'SELECT * FROM product WHERE ProductStatus = "Posted"';
     
     db.query(query, (err, results) => {
         if (err) {
@@ -560,7 +540,6 @@ app.get('/categories', (req, res) => {
 });
 
 
-
 //get cart item into cart page
 app.get('/cart/item', verify, (req, res) => {
     const userId = req.user.id;
@@ -618,8 +597,6 @@ app.get('/cart/item', verify, (req, res) => {
         });
     });
 });
-
-
 
 
 //can get the cart_id with user_id
@@ -1085,13 +1062,195 @@ app.get('/news', (req, res) => {
 
 
 
-  app.post('/your-endpoint', (req, res) => {
-    console.log('Request body:', req.body); // Check what is being sent
-    if (!req.body) {
-        return res.status(400).json({ error: "Request body is required." });
-    }
-    // Continue processing...
+  
+
+
+//Admin Page
+// Middleware to check if user is an admin
+function isAdmin(req, res, next) {
+    const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+  
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+      if (err) return res.status(403).json({ message: 'Invalid token' });
+  
+      if (decoded.isAdmin) {
+        next(); // Allow access to admin routes
+      } else {
+        return res.status(403).json({ message: 'Access denied: Admins only' });
+      }
+    });
+  }
+  
+  // Protect admin routes with middleware
+app.get('/admindash/dashboard', isAdmin, (req, res) => {
+    res.send('Welcome to the Admin Dashboard');
 });
+  
+
+app.post('/admindash/login', (req, res) => {
+    const { email, password } = req.body;
+
+    const checkEmailSql = 'SELECT * FROM admin WHERE admin_email = ?';
+
+    db.query(checkEmailSql, [email], (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database query error' });
+
+        if (results.length === 0) {
+            return res.status(400).json({ error: 'Invalid email. Please sign up.' });
+        }
+
+        const admin = results[0];
+        const storedPassword = admin.admin_password;
+
+        // Use bcrypt to compare the passwords
+        bcrypt.compare(password, storedPassword, (err, isMatch) => {
+            if (err) return res.status(500).json({ error: 'Error comparing passwords' });
+
+            if (!isMatch) {
+                return res.status(400).json({ error: 'Incorrect password. Please try again.' });
+            }
+
+            // If the password matches, create a token and send the response
+            const accesstoken = jwt.sign({ id: admin.admin_id, isAdmin: true }, SECRET_KEY, { expiresIn: '1d' });
+            const response = {
+                id: admin.admin_id,
+                email: admin.admin_email,
+                name: admin.admin_name,
+                accesstoken,
+            };
+            console.log('Admin Object:', admin);
+            console.log('Response Data:', response); // Log response data for debugging
+            res.json(response);
+        });
+    });
+});
+
+app.post('/admindash/signup', async (req, res) => {
+    const { admin_name, admin_email, admin_hp, admin_password } = req.body;
+
+    const checkEmailSql = 'SELECT * FROM admin WHERE admin_email = ?';
+    const checkPhoneSql = 'SELECT * FROM admin WHERE admin_hp = ?';
+
+    try {
+        // Check if the email already exists
+        const emailExists = await new Promise((resolve, reject) => {
+            db.query(checkEmailSql, [admin_email], (err, results) => {
+                if (err) return reject(err);
+                resolve(results);
+            });
+        });
+
+        if (emailExists.length > 0) return res.status(400).json({ error: 'Admin email has been used' });
+
+        // Check if the phone number already exists
+        const phoneExists = await new Promise((resolve, reject) => {
+            db.query(checkPhoneSql, [admin_hp], (err, results) => {
+                if (err) return reject(err);
+                resolve(results);
+            });
+        });
+
+        if (phoneExists.length > 0) return res.status(400).json({ error: 'Admin phone number has been used' });
+
+        // Hash the password before saving
+        const hashedPassword = await bcrypt.hash(admin_password, 10);
+        const insertAdminSql = `INSERT INTO admin (admin_name, admin_email, admin_hp, admin_password) VALUES (?, ?, ?, ?)`;
+        
+        await new Promise((resolve, reject) => {
+            db.query(insertAdminSql, [admin_name, admin_email, admin_hp, hashedPassword], (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        });
+
+        return res.status(201).json({ message: 'Admin registered successfully' });
+    } catch (error) {
+        console.error('Database error:', error); // Log the actual error for debugging
+        return res.status(500).json({ error: 'Database query error' });
+    }
+});
+
+app.get('/admindash/products', (req, res) => {
+    const query = 'SELECT * FROM product'; // Fetch all products, no filtering by ProductStatus
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error', error: err });
+        }
+        if (!results || results.length === 0) {
+            return res.status(404).json({ message: 'No products found' });
+        }
+        const processedResults = results.map(product => {
+            let imgPaths = product.ProductImg.replace(/^"|"$/g, ''); // Remove extra quotes
+            imgPaths = imgPaths.split(',').map(path => `http://localhost:8081/${path.trim()}`); // Convert to array of URLs
+            return {
+                ...product,
+                ProductImg: imgPaths
+            };
+        });
+        res.json(processedResults);
+    });
+});
+
+
+// API to update product details
+app.put('/products/:id', productUpload.single('ProductImage'), (req, res) => {
+    const productId = req.params.id;
+    const { ProductName, ProductDes, ProductPrice, ProductStock, ProductStatus } = req.body;
+
+    // Check if a new image is uploaded and get its path
+    let productImagePath = null;
+    if (req.file) {
+        productImagePath = req.file.path; // New image path
+    }
+
+    const query = `
+        UPDATE product 
+        SET ProductName = ?, ProductDes = ?, ProductPrice = ?, ProductStock = ?, ProductStatus = ?${productImagePath ? ', ProductImg = ?' : ''}
+        WHERE ProductID = ?
+    `;
+
+    const values = [
+        ProductName,
+        ProductDes,
+        ProductPrice,
+        ProductStock,
+        ProductStatus,
+        ...(productImagePath ? [productImagePath] : []), // Include the image path only if it's available
+        productId
+    ];
+
+    db.query(query, values, (err, result) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+
+        if (result.affectedRows > 0) {
+            res.json({ message: 'Product updated successfully' });
+        } else {
+            res.status(404).send({ message: 'Product not found' });
+        }
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.listen(8081, () => {
     console.log("Server is running on port 8081");

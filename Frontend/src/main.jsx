@@ -12,7 +12,7 @@ import Signup from './Login/Signup.jsx';
 import UserProfile from './User/UserProfile.jsx';
 import UpdateProfile from './User/UpdateProfile.jsx';
 import ProductPage from './ProductPage/ProductPage.jsx'
-import UploadProduct from './AdminPanel/UploadProduct/UploadProduct.jsx'
+import UploadProduct from './AdminPanel/AdminProduct/UploadProduct/UploadProduct.jsx'
 import IndividualProduct from './ProductPage/IndividualProduct.jsx'
 import Cart from './Cart/Cart.jsx'
 import UserOrderHistory from './UserOrderHistory/UserOrderHistory.jsx'
@@ -21,9 +21,12 @@ import ReviewForm from './Review/ReviewForm.jsx';
 import AddNews from './AdminPanel/UploadNews/AddNews.jsx'
 import ReviewTest from './Review/ReviewTest.jsx';
 
-
-
-
+import AdminRoute from './AdminRoute.jsx';
+import AdminDashboard from './AdminPanel/AdminPage/AdminPage.jsx'
+import AdminLogin from './AdminPanel/AdminLogin.jsx'
+import AdminUpdateProduct from './AdminPanel/AdminProduct/UpdateProduct/UpdateProduct.jsx'
+import AdminProduct from './AdminPanel/AdminProduct/AdminProduct.jsx'
+import AdminProductView from './AdminPanel/AdminProduct/AdminIndividualProduct/AdminProductView.jsx'
 
 
 
@@ -50,16 +53,13 @@ root.render(
           <Route path="/review" element={<ReviewForm />} />
           <Route path="/addNews" element={<AddNews />} />
           <Route path="/rev" element={<ReviewTest/>} />
-          <Route
-            path="/category"
-            element={
-              <ProtectedRoute>
-                <Login/>
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/uploadproduct" element={<UploadProduct/>}/>
-
+          
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/admin/product" element={<AdminRoute><AdminProduct /></AdminRoute>} />
+          <Route path="/admin/product/edit/:id" element={<AdminRoute><AdminUpdateProduct /></AdminRoute>}/>
+          <Route path="/admin/uploadproduct" element={<AdminRoute><UploadProduct/></AdminRoute>}/>
+          <Route path="/admin/product/view/:productId" element={<AdminRoute><AdminProductView /></AdminRoute>} />
         </Routes>
       </Router>
     </AuthProvider>

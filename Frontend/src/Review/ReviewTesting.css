@@ -1,4 +1,4 @@
-.card {
+.reviewcard {
     width: 17em;
     height: 22.5em;
     background: #fbf2e6;
@@ -10,7 +10,7 @@
     flex-direction: column;
   }
   
-  .card span {
+  .reviewcard span {
     font-weight: bold;
     color: green;
     text-align: center;
@@ -18,7 +18,7 @@
     font-size: 1em;
   }
   
-  .card .info {
+  .reviewcard .info {
     font-weight: 400;
     color: green;
     font-weight: bold;
@@ -28,7 +28,7 @@
     margin: 1em;
   }
   
-  .card .img {
+  .reviewcard .img {
     width: 4.8em;
     height: 4.8em;
     background: white;
