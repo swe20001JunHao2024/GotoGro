@@ -90,7 +90,7 @@
     object-fit: cover; /* Maintain aspect ratio while covering the area */
     margin: 5px; /* Space between images */
     border: 1px solid #ccc; /* Border around each image */
-    border-radius: 5px; /* Rounded corners for images */
+    border-radius: 6px; /* Rounded corners for images */
 }
 
 @media (max-width: 600px) {
