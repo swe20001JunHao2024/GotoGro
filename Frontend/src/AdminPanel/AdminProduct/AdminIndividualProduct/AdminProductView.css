@@ -51,6 +51,7 @@
     cursor: pointer;
     width: 90px;
     margin-top: 10px;
+    margin-bottom: 20px;
 }
 
 .edit-button:hover {
