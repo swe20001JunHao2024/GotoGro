@@ -50,7 +50,7 @@
     border-radius: 4px;
     cursor: pointer;
     width: 90px;
-    margin: 30px 0 10px 0;
+    margin-top: 10px;
 }
 
 .edit-button:hover {
