@@ -1,86 +1,10 @@
-// import { useParams } from 'react-router-dom';
-// import axios from 'axios';
-// import React, { useState, useEffect } from 'react';
-
-// const IndividualProduct = () => {
-//     const { id } = useParams(); // Get the product ID from the URL
-//     const [product, setProduct] = useState(null);
-//     const [loading, setLoading] = useState(true);
-
-//     useEffect(() => {
-//         const fetchProduct = async () => {
-//             try {
-//                 const response = await axios.get(`/products/${id}`);
-//                 console.log('Fetched product:', response.data); // Debug log
-//                 setProduct(response.data);
-//                 setLoading(false);
-//             } catch (error) {
-//                 console.error('Error fetching product details', error);
-//                 setLoading(false);
-//             }
-//         };
-
-//         fetchProduct();
-//     }, [id]);
-
-//     if (loading) {
-//         return <p>Loading...</p>;
-//     }
-
-//     if (!product) {
-//         return <p>Product not found</p>;
-//     }
-
-//     return (
-//         <div className='product-detail'>
-//             <h1>{product.ProductName}</h1>
-            
-//             {/* Display multiple product images */}
-//             {product.ProductImg && product.ProductImg.map((imgUrl, index) => (
-//                 <img
-//                     key={index}
-//                     src={imgUrl}
-//                     alt={`${product.ProductName} image ${index + 1}`}
-//                     className="product-detail-image"
-//                 />
-//             ))}
-
-//             <p>{product.ProductDes}</p>
-//             <p>Price: ${product.ProductPrice}</p>
-//             {product.ProductDiscountPrice && (
-//                 <p>Discounted Price: ${product.ProductDiscountPrice}</p>
-//             )}
-//             <p>Category: {product.ProductCat}</p>
-//             <p>Stock: {product.ProductStock > 0 ? 'In Stock' : 'Out of Stock'}</p>
-//         </div>
-//     );
-// };
-
-// export default IndividualProduct;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick'; // Importing the slider
 import './IndividualProduct.css';
-import Nav from '../NavBar/Nav'
-
-
-
+import Nav from '../NavBar/Nav';
+import Footer from '../Footer/Footer';
 // Slick carousel CSS
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
@@ -160,64 +84,86 @@ const IndividualProduct = () => {
 
     return (
         <div>
-            <Nav/>
-        <div className='product-detail'>
-            <div className="product-layout">
-                <div className="carousel-box">
-                    {product.ProductImg && (
-                        <Slider {...settings}>
-                            {product.ProductImg.map((imgUrl, index) => (
-                                <div key={index}>
-                                    <img
-                                        src={imgUrl}
-                                        alt={`${product.ProductName} image ${index + 1}`}
-                                        style={{
-                                            width: '100%', 
-                                            height: '400px', 
-                                            objectFit: 'cover' 
-                                        }}
-                                    />
-                                </div>
-                            ))}
-                        </Slider>
-                    )}
+            <Nav />
+            <div className='product-detail'>
+                <div className="product-layout">
+                    <div className="carousel-box">
+                        {product.ProductImg && product.ProductImg.length > 1 ? (
+                            <Slider {...settings}>
+                                {product.ProductImg.map((imgUrl, index) => (
+                                    <div key={index}>
+                                        <img
+                                            src={imgUrl}
+                                            alt={`${product.ProductName} image ${index + 1}`}
+                                            style={{
+                                                width: 'auto', 
+                                                height: '350px', 
+                                                objectFit: 'cover',
+                                                marginLeft: '20%'
+                                            }}
+                                        />
+                                    </div>
+                                ))}
+                            </Slider>
+                        ) : (
+                            product.ProductImg.length === 1 && (
+                                <img
+                                    src={product.ProductImg[0]} // Display the single image directly
+                                    alt={`${product.ProductName} image`}
+                                    style={{
+                                        width: '100%', 
+                                        height: '400px', 
+                                        objectFit: 'cover' 
+                                    }}
+                                />
+                            )
+                        )}
+                    </div>
+
+                    <div className="product-data">
+                        <h1>{product.ProductName}</h1>
+                        <p className={product.ProductDiscountPrice > 0 ? 'original-price' : ''}>
+                            Price: RM{product.ProductPrice}
+                        </p>
+                        {product.ProductDiscountPrice > 0 && (
+                            <p className="discounted-price">
+                                Discounted Price: RM{product.ProductDiscountPrice}
+                            </p>
+                        )}
+                        <p>Category: {product.ProductCat}</p>
+
+                        {product.ProductStock > 0 && (
+                            <div>
+                                <label htmlFor="quantity">Quantity: </label>
+                                <input
+                                    type="number"
+                                    id="quantity"
+                                    value={quantity}
+                                    onChange={(e) => setQuantity(parseInt(e.target.value))}
+                                    min="1"
+                                    max={product.ProductStock} // Set max to available stock
+                                />
+                            </div>
+                        )}
+
+                        {product.ProductStock > 0 ? (
+                            <button className="add-to-cart-button" onClick={() => addToCart(product.ProductID, quantity)}>
+                                <span>Add to Cart</span>
+                            </button>
+                        ) : (
+                            <button className='out-of-stock-button' disabled>Out of Stock</button>
+                        )}
+
+                        {successMessage && <p className="success-message">{successMessage}</p>}
+                    </div>
                 </div>
 
-                <div className="product-data">
-                    <h1>{product.ProductName}</h1>
+                {/* Move product description here */}
+                <div className="product-description">
                     <p>{product.ProductDes}</p>
-                    <p>Price: RM{product.ProductPrice}</p>
-                    {product.ProductDiscountPrice && (
-                        <p>Discounted Price: RM{product.ProductDiscountPrice}</p>
-                    )}
-                    <p>Category: {product.ProductCat}</p>
-
-                    {product.ProductStock > 0 && (
-                        <div>
-                            <label htmlFor="quantity">Quantity: </label>
-                            <input
-                                type="number"
-                                id="quantity"
-                                value={quantity}
-                                onChange={(e) => setQuantity(parseInt(e.target.value))}
-                                min="1"
-                                max={product.ProductStock} // Set max to available stock
-                            />
-                        </div>
-                    )}
-
-                    {product.ProductStock > 0 ? (
-                        <button className="add-to-cart-button" onClick={() => addToCart(product.ProductID, quantity)}>
-                            <span>Add to Cart</span>
-                        </button>
-                    ) : (
-                        <button className='out-of-stock-button' disabled>Out of Stock</button>
-                    )}
-
-                    {successMessage && <p className="success-message">{successMessage}</p>}
                 </div>
             </div>
-        </div>
+            <Footer/>
         </div>
     );
 };

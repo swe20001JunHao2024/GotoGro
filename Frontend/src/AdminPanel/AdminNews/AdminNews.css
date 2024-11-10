@@ -1,0 +1,100 @@
+/* AdminNews.css */
+
+/* General styling for the page */
+.admin-news-page {
+    margin-left: 250px; /* Adjust if needed based on your side nav width */
+    padding: 20px;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+}
+
+/* Headings */
+h5 {
+    color: #333;
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 24px;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+}
+
+/* News Table */
+.news-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Table header */
+.news-table th {
+    background-color: #333;
+    color: white;
+    padding: 12px 15px;
+    text-align: center;
+}
+
+/* Table body rows */
+.news-table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+}
+
+/* Alternate row colors */
+.news-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Center images in the table */
+.news-table img {
+    display: block;
+    margin: 0 auto;
+}
+
+/* No data available row */
+.news-table td[colspan="5"] {
+    text-align: center;
+    color: #888;
+}
+
+/* Add hover effect to rows */
+.news-table tr:hover {
+    background-color: #e0f7e9;;
+    cursor: pointer;
+}
+
+
+@media screen and (max-width: 768px) {
+    .admin-news-page {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    .news-table, .news-table thead, .news-table tbody, .news-table th, .news-table td, .news-table tr {
+        display: block;
+    }
+
+    .news-table thead {
+        display: none;
+    }
+
+    .news-table tr {
+        margin-bottom: 15px;
+    }
+
+    .news-table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    .news-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        text-align: left;
+        font-weight: bold;
+    }
+}

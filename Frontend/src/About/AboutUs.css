@@ -1,0 +1,137 @@
+.about-container {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 80px auto 40px auto;
+  }
+  
+  .about-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .about-header h1 {
+    font-size: 3rem;
+    color: #1e50a2;
+  }
+  
+  .about-header p {
+    font-size: 1.2rem;
+    color: #666;
+  }
+  
+  .about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  
+  .about-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .about-section h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #444;
+  }
+  
+  .about-section p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #666;
+  }
+  
+  /* Flex for Vision and Mission */
+  .vision-mission {
+    display: flex;
+    gap: 40px;
+    justify-content: space-between;
+    text-align: center;
+  }
+  
+  .vision-mission .vision, .vision-mission .mission {
+    flex: 1;
+  }
+  
+  .about-section ul {
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+  
+  .about-section ul li {
+    margin: 10px 0;
+    font-size: 1rem;
+  }
+  
+  .two-container-section {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .left-container {
+    flex: 0.4; 
+    padding: 20px;
+  }
+  
+  .right-container {
+    flex: 0.6; 
+    padding: 20px;
+  }
+
+  .left-container h3{
+    font-weight: 600;
+    font-weight: 16px;
+    font-size: 40px;
+    color: #444;
+    text-align: center;
+}
+.left-container  h2{ 
+    color: #1e50a2;
+    font-size: 26px;
+    margin-top: 30px;
+    max-width: 400px;
+}
+
+.left-container  h1{
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #666;
+}
+
+
+
+
+  
+  /* Responsive Design for Mobile */
+  @media screen and (max-width: 768px) {
+    .about-container {
+      padding: 20px;
+    }
+  
+    .about-header h1 {
+      font-size: 2rem;
+    }
+  
+    .about-content {
+      gap: 20px;
+    }
+  
+    .about-section h2 {
+      font-size: 1.5rem;
+    }
+  
+    /* Responsive layout for Vision and Mission */
+    .vision-mission {
+      flex-direction: column;
+      gap: 20px;
+    }
+  
+    /* Responsive layout for Two Containers */
+    .two-container-section {
+      flex-direction: column;
+    }
+  }

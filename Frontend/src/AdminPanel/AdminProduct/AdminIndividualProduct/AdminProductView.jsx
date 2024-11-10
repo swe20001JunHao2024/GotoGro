@@ -42,20 +42,7 @@ const AdminProductView = () => {
             <div className="admin-product-view">
                 <h2>Product Information</h2>
                 <div className="product-info">
-                    <h3>{product.ProductName}</h3>
-                    <p><strong>Description:</strong> {product.ProductDes}</p>
-                    <p><strong>Price:</strong> RM{product.ProductPrice}</p>
-                    
-                    {/* Display Discount Price only if it's greater than 0 */}
-                    {product.ProductDiscountPrice > 0 && (
-                        <p><strong>Discounted Price:</strong> RM{product.ProductDiscountPrice}</p>
-                    )}
-
-                    <p><strong>Category:</strong> {product.ProductCat}</p>
-                    <p><strong>Stock:</strong> {product.ProductStock}</p>
-                    <p><strong>Status:</strong> {product.ProductStatus ? "Active" : "Inactive"}</p>
-                    
-                    <div className="product-images">
+                <div className="product-images">
                         <h4>Product Images:</h4>
                         <div className="image-gallery">
                             {product.ProductImg && product.ProductImg.length > 0 ? (
@@ -73,6 +60,20 @@ const AdminProductView = () => {
                             )}
                         </div>
                     </div>
+                    <h3>{product.ProductName}</h3>
+                    <p><strong>Description:</strong> {product.ProductDes}</p>
+                    <p><strong>Price:</strong> RM{product.ProductPrice}</p>
+                    
+                    {/* Display Discount Price only if it's greater than 0 */}
+                    {product.ProductDiscountPrice > 0 && (
+                        <p><strong>Discounted Price:</strong> RM{product.ProductDiscountPrice}</p>
+                    )}
+
+                    <p><strong>Category:</strong> {product.ProductCat}</p>
+                    <p><strong>Stock:</strong> {product.ProductStock}</p>
+                    <p><strong>Status:</strong> {product.ProductStatus ? "Active" : "Inactive"}</p>
+                    
+                    
                     <button 
                     className="edit-button"
                     onClick={handleEditClick}
@@ -81,7 +82,7 @@ const AdminProductView = () => {
                 </button>
                 </div>
                 
-                {/* Edit Button */}
+                
                 
             </div>
         </div>

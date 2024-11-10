@@ -77,7 +77,7 @@ const AdminProductDetails = () => {
         })
         .then(response => {
             alert(response.data.message); // Show success message
-            navigate('/admin'); // Redirect to the product list
+            navigate('/admin/product'); // Redirect to the product list
         })
         .catch(err => {
             setError('Failed to update product');

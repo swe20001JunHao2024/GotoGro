@@ -53,8 +53,9 @@
 
 .carousel-caption h3 {
     font-size: 30px;
-    font-weight: bold;
+    
     margin: 0; 
+    background-color: whitesmoke;
 }
 
 .carousel-caption p {

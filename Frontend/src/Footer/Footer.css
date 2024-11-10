@@ -1,0 +1,96 @@
+.footer {
+    background-color: #f0d071;
+    color: #fff;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column; /* Stack footer sections vertically */
+    justify-content: space-between; /* Ensure footer-bottom stays at the bottom */
+    min-height: 200px; /* Adjust as needed */
+  }
+  
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    flex-grow: 1; /* Allows the footer container to take up available space */
+  }
+  
+  .footer-links {
+    display: flex; /* Apply flex to the footer-links */
+    justify-content: space-between; /* Space out the footer columns */
+    flex-wrap: wrap; /* Ensure it wraps on smaller screens */
+    gap: 20px; /* Optional: Adds space between columns */
+  }
+  
+  .footer-column {
+    display: flex;
+    flex-direction: column; /* Stack content inside each column */
+    flex: 1; /* Each column takes equal space */
+    min-width: 200px; /* Adjust the minimum width */
+    margin: 10px;
+  }
+  
+  .footer-column h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    
+  }
+  
+  .footer-column ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-column ul li {
+    margin-bottom: 10px;
+  }
+  
+  .footer-column ul li a {
+    color: #444;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-column ul li a:hover {
+    color: #1e50a2;
+  }
+  
+  .social-icons {
+    display: flex;
+    gap: 15px; /* Space between social icons */
+  }
+  
+  .social-icons a {
+    color: #444;
+    font-size: 24px;
+    transition: color 0.3s ease;
+  }
+  
+  .social-icons a:hover {
+    color: #1e50a2;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    padding: 10px 0;
+    border-top: 1px solid #444;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  
+  .footer-bottom p {
+    margin: 0;
+    color: #444;
+  }
+  
+  @media (max-width: 768px) {
+    .footer-links {
+      flex-direction: column; /* Stack columns on smaller screens */
+      align-items: center;
+    }
+  
+    .footer-column {
+      text-align: center;
+    }
+  }
+  

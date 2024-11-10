@@ -86,6 +86,7 @@ const UpdateProfile = () => {
             console.log("Upload Response:", response.data);
             if (response.data.message === 'Profile picture updated successfully') {
                 alert('Profile picture updated successfully!');
+                navigate('/');
                 window.location.reload();
             } else {
                 setUploadError(response.data.message || 'Error uploading profile picture');

@@ -39,9 +39,8 @@ const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: '',
-    database: 'test'
+    database: 'gotogro'
 });
-
 
 
 //verify token
@@ -87,63 +86,7 @@ app.get('/users', (req, res) => {
     });
 });
 
-// app.post('/login', (req, res) => {
-//     const { email, password } = req.body;
-    
 
-//     const checkEmailSql = 'SELECT * FROM user WHERE UserEmail = ?';
-    
-//     db.query(checkEmailSql, [email], (err, results) => {
-//         if (err) return res.status(500).json({ error: 'Database query error' });
-
-//         if (results.length === 0) {
-//             return res.status(400).json({ error: 'Invalid email. Please sign up.' });
-//         }
-
-//         const user = results[0];
-//         const storedPassword = user.password;
-
-//         if (password !== storedPassword) {
-//             return res.status(400).json({ error: 'Incorrect password. Please try again.' });
-//         }
-
-//         const token = signToken(user);
-//         console.log(`JWT Token created: ${token}`);
-        
-//         // Respond with the generated token
-//         return res.json({ token });
-//     });
-// });
-
-//used
-// app.post('/signup', (req, res) => {
-//     const { username, email, UserHP, password } = req.body;
-  
-//     const checkUsernameSql = 'SELECT * FROM user WHERE Username = ?';
-//     const checkEmailSql = 'SELECT * FROM user WHERE UserEmail = ?';
-//     const checkUserHPSql = 'SELECT * FROM user WHERE UserHP = ?';
-  
-//     db.query(checkUsernameSql, [username], (err, results) => {
-//       if (err) return res.status(500).json({ error: 'Database query error' });
-//       if (results.length > 0) return res.status(400).json({ error: 'Username has been used' });
-  
-//       db.query(checkEmailSql, [email], (err, results) => {
-//         if (err) return res.status(500).json({ error: 'Database query error' });
-//         if (results.length > 0) return res.status(400).json({ error: 'Email has been used' });
-  
-//         db.query(checkUserHPSql, [UserHP], (err, results) => {
-//           if (err) return res.status(500).json({ error: 'Database query error' });
-//           if (results.length > 0) return res.status(400).json({ error: 'Phone number has been used' });
-  
-//           const insertUserSql = `INSERT INTO user (Username, UserEmail, UserHP, password) VALUES (?, ?, ?, ?)`;
-//           db.query(insertUserSql, [username, email, UserHP, password], (err, result) => {
-//             if (err) return res.status(500).json({ error: 'Failed to insert user' });
-//             return res.status(201).json({ message: 'User registered successfully' });
-//           });
-//         });
-//       });
-//     });
-// });
 
 //signup
 app.post('/signup', async (req, res) => {
@@ -201,7 +144,44 @@ app.post('/signup', async (req, res) => {
         return res.status(500).json({ error: 'Database query error' });
     }
 });
+//login
+app.post('/logins', (req, res) => {
+    const { email, password } = req.body;
 
+    const checkEmailSql = 'SELECT * FROM user WHERE UserEmail = ?';
+
+    db.query(checkEmailSql, [email], (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database query error' });
+
+        if (results.length === 0) {
+            return res.status(400).json({ error: 'Invalid email. Please sign up.' });
+        }
+
+        const user = results[0];
+        const storedPassword = user.password;
+
+        // Use bcrypt to compare the passwords
+        bcrypt.compare(password, storedPassword, (err, isMatch) => {
+            if (err) return res.status(500).json({ error: 'Error comparing passwords' });
+
+            if (!isMatch) {
+                return res.status(400).json({ error: 'Incorrect password. Please try again.' });
+            }
+
+            // If the password matches, create a token and send the response
+            const accesstoken = jwt.sign({ id: user.UserID , isAdmin: false }, SECRET_KEY,  { expiresIn: '1d' });
+            const response = {
+                id: user.UserID,
+                email: user.UserEmail,
+                username: user.Username,
+                accesstoken,
+            };
+            console.log('User Object:', user);
+            console.log('Response Data:', response); // Log response data for debugging
+            res.json(response);
+        });
+    });
+});
 //reset password
 app.put('/resetPassword', verify, (req, res) => {
     const { oldPassword, newPassword } = req.body;
@@ -356,45 +336,6 @@ app.post('/uploadProfilePicture', verify, upload.single('profilePicture'), (req,
     });
 });
 
-
-// used in login page
-app.post('/logins', (req, res) => {
-    const { email, password } = req.body;
-
-    const checkEmailSql = 'SELECT * FROM user WHERE UserEmail = ?';
-
-    db.query(checkEmailSql, [email], (err, results) => {
-        if (err) return res.status(500).json({ error: 'Database query error' });
-
-        if (results.length === 0) {
-            return res.status(400).json({ error: 'Invalid email. Please sign up.' });
-        }
-
-        const user = results[0];
-        const storedPassword = user.password;
-
-        // Use bcrypt to compare the passwords
-        bcrypt.compare(password, storedPassword, (err, isMatch) => {
-            if (err) return res.status(500).json({ error: 'Error comparing passwords' });
-
-            if (!isMatch) {
-                return res.status(400).json({ error: 'Incorrect password. Please try again.' });
-            }
-
-            // If the password matches, create a token and send the response
-            const accesstoken = jwt.sign({ id: user.UserID , isAdmin: false }, SECRET_KEY,  { expiresIn: '1d' });
-            const response = {
-                id: user.UserID,
-                email: user.UserEmail,
-                username: user.Username,
-                accesstoken,
-            };
-            console.log('User Object:', user);
-            console.log('Response Data:', response); // Log response data for debugging
-            res.json(response);
-        });
-    });
-});
 
 app.post('/upload-profile-pic', upload.single('profilePic'), (req, res) => {
     const userId = req.body.userId;
@@ -560,7 +501,7 @@ app.get('/cart/item', verify, (req, res) => {
 
         // Step 2: Get the items from cart_item and join with product details
         const getCartItemsQuery = `
-            SELECT ci.ProductID, ci.quantity, p.ProductName, p.ProductPrice, p.ProductImg
+            SELECT ci.ProductID, ci.quantity, p.ProductName, p.ProductPrice, p.ProductImg, p.ProductDiscountPrice
             FROM cart_item ci
             JOIN product p ON ci.ProductID = p.ProductID
             WHERE ci.cart_id = ?
@@ -657,15 +598,40 @@ app.post('/cart/item', verify, async (req, res) => {
 
         const cartId = results[0].cart_id;
 
-        // Step 2: Insert the item into cart_item table
-        const insertCartItemQuery = 'INSERT INTO cart_item (cart_id, ProductID, quantity) VALUES (?, ?, ?)';
+        // Step 2: Check if the product already exists in the cart_item table
+        const checkProductQuery = 'SELECT quantity FROM cart_item WHERE cart_id = ? AND ProductID = ?';
 
-        db.query(insertCartItemQuery, [cartId, ProductID, quantity], (insertErr, insertResult) => {
-            if (insertErr) {
-                return res.status(500).json({ message: 'Failed to add item to cart' });
+        db.query(checkProductQuery, [cartId, ProductID], (checkErr, checkResults) => {
+            if (checkErr) {
+                return res.status(500).json({ message: 'Database error when checking product' });
             }
 
-            res.status(201).json({ message: 'Item added to cart successfully', cartItemId: insertResult.insertId });
+            if (checkResults.length > 0) {
+                // Product already exists, so update the quantity
+                const currentQuantity = checkResults[0].quantity;
+                const newQuantity = currentQuantity + quantity;
+
+                const updateQuantityQuery = 'UPDATE cart_item SET quantity = ? WHERE cart_id = ? AND ProductID = ?';
+
+                db.query(updateQuantityQuery, [newQuantity, cartId, ProductID], (updateErr) => {
+                    if (updateErr) {
+                        return res.status(500).json({ message: 'Failed to update product quantity' });
+                    }
+
+                    return res.status(200).json({ message: 'Product quantity updated successfully' });
+                });
+            } else {
+                // Product does not exist, so insert it as a new item
+                const insertCartItemQuery = 'INSERT INTO cart_item (cart_id, ProductID, quantity) VALUES (?, ?, ?)';
+
+                db.query(insertCartItemQuery, [cartId, ProductID, quantity], (insertErr, insertResult) => {
+                    if (insertErr) {
+                        return res.status(500).json({ message: 'Failed to add item to cart' });
+                    }
+
+                    return res.status(201).json({ message: 'Item added to cart successfully', cartItemId: insertResult.insertId });
+                });
+            }
         });
     });
 });
@@ -677,7 +643,7 @@ app.get('/order/:orderId', verify, (req, res) => {
 
     // Step 1: Get the order details and join with order items and product information
     const getOrderItemsQuery = `
-        SELECT oi.ProductID, oi.quantity, p.ProductName, p.ProductPrice, p.ProductImg
+        SELECT oi.ProductID, oi.quantity, oi.price AS OrderItemPrice, p.ProductName, p.ProductImg
         FROM order_item oi
         JOIN product p ON oi.ProductID = p.ProductID
         JOIN \`order\` o ON oi.order_id = o.order_id
@@ -705,10 +671,11 @@ app.get('/order/:orderId', verify, (req, res) => {
             };
         });
 
-        // Send processed order items along with product details
+        // Send processed order items along with the correct price from order_item
         res.json(processedItems);
     });
 });
+
 
 
 //delete product from cart
@@ -1054,6 +1021,79 @@ app.get('/news', (req, res) => {
     });
   });
   
+app.put('/users/loyalty', verify, (req, res) => {
+    const { points } = req.body;
+    const userId = req.user.id; // Get user ID from JWT token
+  
+    // Check if 'points' is a valid number
+    if (typeof points !== 'number' || isNaN(points)) {
+      return res.status(400).json({ message: "Invalid points value" });
+    }
+  
+    db.query('SELECT loyalty_points FROM user WHERE UserID = ?', [userId], (err, rows) => {
+      if (err) {
+        console.error("Error fetching loyalty points:", err);
+        return res.status(500).json({ message: "Error fetching loyalty points", error: err });
+      }
+  
+      if (rows.length === 0) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      const currentPoints = rows[0].loyalty_points;
+  
+      // Check if 'currentPoints' is a valid number
+      if (typeof currentPoints !== 'number' || isNaN(currentPoints)) {
+        return res.status(500).json({ message: "Invalid current loyalty points in database" });
+      }
+  
+      const newPoints = currentPoints + points;
+  
+      db.query('UPDATE user SET loyalty_points = ? WHERE UserID = ?', [newPoints, userId], (err, result) => {
+        if (err) {
+          console.error("Error updating loyalty points:", err);
+          return res.status(500).json({ message: "Error updating loyalty points", error: err });
+        }
+  
+        res.status(200).json({ message: "Loyalty points updated successfully", newPoints });
+      });
+    });
+  });
+  
+app.get('/voucher_collected', verify, (req, res) => {
+    const userId = req.user.id; // Get user ID from the token
+  
+    // SQL query to get collected vouchers and their details
+    const query = `
+      SELECT vc.*, v.voucher_id, v.voucher_name, v.voucher_type, v.voucher_amount, v.voucher_min_spend, v.voucher_max_disc, v.voucher_expired
+      FROM voucher_collected vc
+      JOIN voucher v ON vc.voucher_id = v.voucher_id
+      WHERE vc.UserID = ?
+    `;
+  
+    db.query(query, [userId], (error, results) => {
+      if (error) {
+        console.error('Error fetching vouchers:', error);
+        return res.status(500).send('Internal Server Error');
+      }
+      
+      // Return the fetched vouchers with all the details
+      res.json(results);
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1154,8 +1194,8 @@ app.post('/admindash/signup', async (req, res) => {
 
         // Hash the password before saving
         const hashedPassword = await bcrypt.hash(admin_password, 10);
-        const insertAdminSql = `INSERT INTO admin (admin_name, admin_email, admin_hp, admin_password) VALUES (?, ?, ?, ?)`;
-        
+        const insertAdminSql = `INSERT INTO admin (admin_name, admin_email, admin_hp, admin_password, admin_role) VALUES (?, ?, ?, ?, 'admin')`;
+
         await new Promise((resolve, reject) => {
             db.query(insertAdminSql, [admin_name, admin_email, admin_hp, hashedPassword], (err, result) => {
                 if (err) return reject(err);
@@ -1169,6 +1209,7 @@ app.post('/admindash/signup', async (req, res) => {
         return res.status(500).json({ error: 'Database query error' });
     }
 });
+
 
 app.get('/admindash/products', (req, res) => {
     const query = 'SELECT * FROM product'; // Fetch all products, no filtering by ProductStatus
@@ -1234,18 +1275,318 @@ app.put('/products/:id', productUpload.single('ProductImage'), (req, res) => {
     });
 });
 
+app.get('/admindash/news', (req, res) => {
+    const currentDate = new Date();
+  
+    // SQL query to fetch current, future, and expired news
+    const sqlCurrent = 'SELECT * FROM news WHERE news_s_date <= ? AND news_e_date >= ?';
+    const sqlFuture = 'SELECT * FROM news WHERE news_s_date > ?';
+    const sqlExpired = 'SELECT * FROM news WHERE news_e_date < ?';
+  
+    // Perform all three queries concurrently
+    const currentNewsPromise = new Promise((resolve, reject) => {
+      db.query(sqlCurrent, [currentDate, currentDate], (err, results) => {
+        if (err) return reject(err);
+        resolve(results);
+      });
+    });
+  
+    const futureNewsPromise = new Promise((resolve, reject) => {
+      db.query(sqlFuture, [currentDate], (err, results) => {
+        if (err) return reject(err);
+        resolve(results);
+      });
+    });
+  
+    const expiredNewsPromise = new Promise((resolve, reject) => {
+      db.query(sqlExpired, [currentDate], (err, results) => {
+        if (err) return reject(err);
+        resolve(results);
+      });
+    });
+  
+    // Resolve all promises and structure the response
+    Promise.all([currentNewsPromise, futureNewsPromise, expiredNewsPromise])
+      .then(([currentNews, futureNews, expiredNews]) => {
+        res.status(200).json({
+          currentNews,
+          futureNews,
+          expiredNews,
+        });
+      })
+      .catch((err) => {
+        console.error('Error fetching news:', err);
+        res.status(500).json({ message: 'Failed to fetch news.' });
+      });
+  });
+  
+app.get('/admindash/news/:news_id', (req, res) => {
+    const news_id = req.params.news_id;
+
+    const sqlGetNewsById = 'SELECT * FROM news WHERE news_id = ?';
+    
+    db.query(sqlGetNewsById, [news_id], (err, result) => {
+        if (err) {
+            console.error('Error fetching news:', err);
+            return res.status(500).json({ error: 'Failed to fetch news' });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'News not found' });
+        }
+
+        res.json(result[0]); // Send the first result as an object (not an array)
+    });
+});
+
+app.put('/admindash/news/:news_id', newsupload.single('news_img'), (req, res) => {
+    const { news_id } = req.params;
+    const { news_title, news_des, news_s_date, news_e_date } = req.body;
+    const news_img = req.file ? `http://localhost:8081/uploads/news/${req.file.filename}` : null;
+  
+    // Update query (with or without the image)
+    let sql;
+    let params;
+  
+    if (news_img) {
+      sql = 'UPDATE news SET news_title = ?, news_des = ?, news_s_date = ?, news_e_date = ?, news_img = ? WHERE news_id = ?';
+      params = [news_title, news_des, news_s_date, news_e_date, news_img, news_id];
+    } else {
+      sql = 'UPDATE news SET news_title = ?, news_des = ?, news_s_date = ?, news_e_date = ? WHERE news_id = ?';
+      params = [news_title, news_des, news_s_date, news_e_date, news_id];
+    }
+  
+    db.query(sql, params, (err, result) => {
+      if (err) {
+        console.error('Error updating news:', err);
+        return res.status(500).json({ message: 'Failed to update news' });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'News not found' });
+      }
+      res.status(200).json({ message: 'News updated successfully!' });
+    });
+  });
+
+app.get('/admindash/users', (req, res) => {
+    const query = 'SELECT * FROM user';
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Error fetching users:', err);
+            return res.status(500).json({ error: 'Failed to fetch users' });
+        }
+        res.json(results);
+    });
+});
+
+app.get('/admindash/userorders', async (req, res) => {
+    try {
+        const query = 'SELECT * FROM `order`';
+        const orders = await new Promise((resolve, reject) => {
+            db.query(query, (err, results) => {
+                if (err) return reject(err);
+                resolve(results);
+            });
+        });
+
+        res.json(orders);
+    } catch (error) {
+        console.error("Error fetching all orders:", error);
+        res.status(500).json({ message: 'Error fetching all orders', error: error.message });
+    }
+});
+
+app.put('/admindash/userorders/:id', verify, async (req, res) => {
+    const { id } = req.params;
+    const { order_status } = req.body;
+
+    try {
+        const updateQuery = 'UPDATE `order` SET order_status = ? WHERE order_id = ?';
+        await new Promise((resolve, reject) => {
+            db.query(updateQuery, [order_status, id], (err, results) => {
+                if (err) return reject(err);
+                resolve(results);
+            });
+        });
+        res.status(200).json({ message: 'Order status updated successfully' });
+    } catch (error) {
+        console.error('Error updating order status:', error);
+        res.status(500).json({ message: 'Error updating order status', error: error.message });
+    }
+});
+
+app.get('/admin/orders/items/:orderId', async (req, res) => {
+    const orderId = req.params.orderId;
+
+    try {
+        console.log('Fetching items for orderId:', orderId);
+
+        // Query to get order items with product details, including images
+        const query = `
+            SELECT oi.order_item_id, p.ProductName AS product_name, oi.quantity, p.ProductPrice AS price, p.ProductImg
+            FROM order_item AS oi
+            JOIN product AS p ON oi.ProductID = p.ProductID
+            WHERE oi.order_id = ?
+        `;
+
+        const orderItems = await new Promise((resolve, reject) => {
+            db.query(query, [orderId], (error, results) => {
+                if (error) {
+                    console.error('Error fetching order items:', error);
+                    return reject(error);
+                }
+                console.log('Fetched order items:', results); // Log the fetched order items
+                resolve(results);
+            });
+        });
+
+        if (orderItems.length === 0) {
+            return res.status(404).json({ message: 'No items found for this order.' });
+        }
+
+        // Process each item to resolve image URLs
+        const processedOrderItems = orderItems.map(item => {
+            // Process the ProductImg similarly to the example
+            let imgPaths = item.ProductImg.replace(/^"|"$/g, ''); // Remove extra quotes
+            imgPaths = imgPaths.split(',').map(path => `http://localhost:8081/${path.trim()}`); // Convert to array of URLs
+
+            return {
+                ...item,
+                ProductImg: imgPaths // Set resolved image URLs
+            };
+        });
+
+        res.json(processedOrderItems);
+    } catch (error) {
+        console.error("Error fetching order items:", error);
+        res.status(500).json({ error: 'Error fetching order items' });
+    }
+});
+
+app.get('/admindash/reviews', (req, res) => {
+    const query = `
+        SELECT 
+            r.review_id, 
+            r.UserID, 
+            u.Username AS user_name,
+            r.rating, 
+            r.review, 
+            r.created_at
+        FROM review AS r
+        JOIN user AS u ON r.UserID = u.UserID
+    `;
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error', error: err });
+        }
+        if (!results || results.length === 0) {
+            return res.status(404).json({ message: 'No reviews found' });
+        }
+        res.json(results);
+    });
+});
+
+app.get('/admindash/adminlist', (req, res) => {
+    const query = 'SELECT * FROM admin';
+
+    db.query(query, (error, results) => {
+        if (error) {
+            console.error('Error fetching admin list:', error);
+            return res.status(500).json({ error: 'Failed to retrieve admin list' });
+        }
+        res.json(results);
+    });
+});
 
 
 
+app.post('/admindash/voucher', async (req, res) => {
+    const { voucher_name, voucher_type, voucher_quantity, voucher_amount,voucher_min_spend, voucher_max_disc, voucher_expired , voucher_loyaltypoints_needed, voucher_status} = req.body;
 
+    try {
+        // Insert the new voucher into the voucher table
+        const insertVoucherSql = `
+            INSERT INTO voucher (voucher_name, voucher_type, voucher_quantity, voucher_amount,voucher_min_spend, voucher_max_disc, voucher_expired, voucher_loyaltypoints_needed, voucher_status) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
 
+        await new Promise((resolve, reject) => {
+            db.query(
+                insertVoucherSql,
+                [voucher_name, voucher_type, voucher_quantity,voucher_min_spend, voucher_max_disc, voucher_amount, voucher_expired, voucher_loyaltypoints_needed, voucher_status],
+                (err, result) => {
+                    if (err) return reject(err);
+                    resolve(result);
+                }
+            );
+        });
 
+        return res.status(201).json({ message: 'Voucher created successfully' });
+    } catch (error) {
+        console.error('Error creating voucher:', error);
+        return res.status(500).json({ error: 'Failed to create voucher' });
+    }
+});
 
+app.get('/admindash/voucher', async (req, res) => {
+    const getAllVouchersQuery = 'SELECT * FROM voucher';
 
+    try {
+        const vouchers = await new Promise((resolve, reject) => {
+            db.query(getAllVouchersQuery, (err, results) => {
+                if (err) return reject(err);
+                resolve(results);
+            });
+        });
 
+        res.status(200).json(vouchers);
+    } catch (error) {
+        console.error('Error fetching vouchers:', error);
+        res.status(500).json({ error: 'Failed to fetch vouchers' });
+    }
+});
 
+app.get('/admindash/voucher/:voucher_id', (req, res) => {
+    const voucherId = req.params.voucher_id;
+    // Replace with your actual database query
+    db.query('SELECT * FROM voucher WHERE voucher_id = ?', [voucherId], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to fetch voucher' });
+        }
+        if (result.length > 0) {
+            res.json(result[0]);
+        } else {
+            res.status(404).json({ error: 'Voucher not found' });
+        }
+    });
+});
 
+// PUT /admindash/vouchers/:id - Update voucher details
+app.put('/admindash/voucher/:voucher_id', (req, res) => {
+    const id = req.params.voucher_id;  // Update this line to use voucher_id
+    const { voucher_name, voucher_type, voucher_quantity, voucher_amount, voucher_min_spend, voucher_max_disc, voucher_expired, voucher_loyaltypoints_needed, voucher_status} = req.body;
+    
+    const sql = `
+        UPDATE voucher
+        SET voucher_name = ?, voucher_type = ?, voucher_quantity = ?, voucher_amount = ?, voucher_min_spend = ?, voucher_max_disc = ?, voucher_expired = ?, voucher_loyaltypoints_needed = ?, voucher_status = ?
+        WHERE voucher_id = ?
+    `;
 
+    db.query(
+        sql,
+        [voucher_name, voucher_type, voucher_quantity, voucher_amount, voucher_min_spend, voucher_max_disc, voucher_expired, voucher_loyaltypoints_needed, voucher_status, id],
+        (err, result) => {
+            if (err) {
+                console.error('Failed to update voucher:', err);
+                return res.status(500).json({ error: 'Failed to update voucher' });
+            }
+            res.json({ message: 'Voucher updated successfully' });
+        }
+    );
+});
 
 
 

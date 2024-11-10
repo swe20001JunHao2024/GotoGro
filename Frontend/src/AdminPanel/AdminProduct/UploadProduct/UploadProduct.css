@@ -10,7 +10,7 @@
     height: 100%;
     padding: 20px;
     background-color: #f4f4f9;
-    margin-left: 250px; /* Adjust the left margin to push content away from the sidebar */
+    margin-left: 250px; 
     
 }
 
@@ -75,26 +75,46 @@
 
 .image-preview-box {
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping to the next row */
+    flex-wrap: wrap; 
     margin: 10px 0 15px 0;
-    border: 1px solid #ccc; /* Border around the preview box */
-    padding: 10px; /* Padding inside the box */
-    border-radius: 5px; /* Rounded corners */
-    max-width: 100%; /* Ensure it doesn't overflow */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
+    border: 1px solid #ccc; 
+    padding: 10px; 
+    border-radius: 5px; 
+    max-width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
 
 .image-preview {
-    flex: 0 0 15%; /* Allow 5 images in a row */
-    height: 100px; /* Fixed height for the images */
-    object-fit: cover; /* Maintain aspect ratio while covering the area */
-    margin: 5px; /* Space between images */
-    border: 1px solid #ccc; /* Border around each image */
-    border-radius: 6px; /* Rounded corners for images */
+    flex: 0 0 15%;
+    height: 100px;
+    object-fit: cover; 
+    margin: 5px; 
+    border: 1px solid #ccc; 
+    border-radius: 6px; 
 }
+
+.success-message {
+    position: fixed; 
+    top: 10px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    background-color: #4CAF50; 
+    color: white; 
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+    opacity: 1; 
+}
+
+.success-message.hide {
+    opacity: 0; 
+}
+
+
 
 @media (max-width: 600px) {
     .image-preview {
-        flex: 0 0 45%; /* On small screens, show 2 images in a row */
+        flex: 0 0 45%; 
     }
 }

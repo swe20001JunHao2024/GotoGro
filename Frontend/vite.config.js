@@ -73,7 +73,28 @@ export default defineConfig({
         target: 'http://localhost:8081', // Your backend server URL
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/review/, '/review')
+        
+      },
+      '/admin/users': {
+                target: 'http://localhost:8081', // Adjust this if needed
+                changeOrigin: true,
+                secure: false,
+      },
+      '/admin/userorders': {
+                target: 'http://localhost:8081', // Adjust this if needed
+                changeOrigin: true,
+                secure: false,
+      },
+      '/admin/orders/items/': {
+                target: 'http://localhost:8081', // Adjust this if needed
+                changeOrigin: true,
+                secure: false,
+      },
+      '/users': {
+        target: 'http://localhost:8081', // Your backend server URL
+        changeOrigin: true,
+        secure: false,
+        
       },
     }
   },

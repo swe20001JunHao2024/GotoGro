@@ -131,3 +131,63 @@
     justify-content: flex-end;  /* Align items to the right */
     padding: 20px;             /* Optional: Add padding for spacing */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+.voucher-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.voucher-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.voucher-list li {
+  cursor: pointer;
+  margin: 10px 0;
+  padding: 10px;
+  background: #f0f0f0;
+  border-radius: 5px;
+}
+
+.voucher-list li:hover {
+  background: #ccc;
+}
+
+.close-modal {
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}

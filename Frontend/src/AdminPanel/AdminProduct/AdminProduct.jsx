@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './AdminProduct.css';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AdminNav from '../AdminNav';
 
 const AdminProduct = () => {
     const [products, setProducts] = useState([]);
+    const navigate = useNavigate(); // Define navigate here
 
     const fetchProducts = async () => {
         try {
@@ -36,30 +37,36 @@ const AdminProduct = () => {
                 </div>
 
                 {/* Stock Table */}
-                <div className="stock-table">
-                    <h2>All Products</h2>
-                    <table>
+                <h5>All Products</h5>
+                <div>
+                    <table className="stock-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Product Image</th>
                                 <th>Product Name</th>
                                 <th>Status</th>
                                 <th>Quantity</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {Array.isArray(products) && products.map((product) => (
-                                <tr key={product.ProductID}>
+                                <tr 
+                                    key={product.ProductID} 
+                                    onClick={() => navigate(`/admin/product/view/${product.ProductID}`)} // Click to navigate
+                                    style={{ cursor: 'pointer' }} // Change cursor on hover
+                                >
                                     <td>{product.ProductID}</td>
+                                    <td>
+                                        <img 
+                                            src={product.ProductImg[0]} // Ensure this is valid
+                                            alt={product.ProductName} 
+                                            className="product-image" 
+                                        />
+                                    </td>
                                     <td>{product.ProductName}</td>
                                     <td>{product.ProductStatus}</td>
                                     <td>{product.ProductStock}</td>
-                                    <td>
-                                        <Link to={`/admin/product/view/${product.ProductID}`}>
-                                            <button className="details-button">Details</button>
-                                        </Link>
-                                    </td>
                                 </tr>
                             ))}
                         </tbody>

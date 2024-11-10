@@ -4,6 +4,7 @@ import './ProductPage.css'; // Adjust the path as needed
 import Nav from '../NavBar/Nav';
 import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
+import Footer from '../Footer/Footer';
 
 const ProductPage = () => {
     const [products, setProducts] = useState([]);
@@ -60,7 +61,6 @@ const ProductPage = () => {
                         key={category}
                         onClick={() => setSelectedCategory(category)}
                         className={selectedCategory === category ? 'active' : ''} 
-                        
                     >
                         {category}
                     </button>
@@ -85,8 +85,23 @@ const ProductPage = () => {
                                         )}
                                     </div>
                                     <h2>{product.ProductName}</h2>
-                                    <p>{product.ProductDes}</p>
-                                    <p className="price">Price: RM{product.ProductPrice}</p>
+
+                                    {/* Conditionally render the price and discount price */}
+                                    {product.ProductDiscountPrice > 0 ? (
+                                        <div>
+                                            <p className="price">
+                                                <span className="original-price" style={{ textDecoration: 'line-through', color: 'gray' }}>
+                                                    RM{product.ProductPrice}
+                                                </span>
+                                                &nbsp;
+                                                <span className="discount-price" style={{ color: 'red', fontWeight: 'bold' }}>
+                                                    RM{product.ProductDiscountPrice}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <p className="price">Price: RM{product.ProductPrice}</p>
+                                    )}
                                 </Link>
                             </ul>
                         ))}
@@ -95,6 +110,7 @@ const ProductPage = () => {
                     !error && <p>No products found</p>
                 )}
             </div>
+            <Footer/>
         </div>
     );
 };

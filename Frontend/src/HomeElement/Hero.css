@@ -129,3 +129,31 @@
     object-fit: contain;
     
 }
+
+
+button.cta{
+    color: #377032;
+    text-decoration: none;
+    font-size: 30px;
+    border: none;
+    background: none;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  button.cta::before {
+    margin-left: auto;
+  }
+  
+  button.cta::after, button.cta::before {
+    content: '';
+    width: 0%;
+    height: 2px;
+    background: #377032;
+    display: block;
+    transition: 0.5s;
+  }
+  
+  button.cta:hover::after, button.cta:hover::before {
+    width: 100%;
+  }

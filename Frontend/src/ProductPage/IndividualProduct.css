@@ -1,29 +1,30 @@
 h1{
-    font-size: 50px;
+    font-size: 35px;
     color: #006657;
     margin-bottom: 30px;
 }
 
 .product-detail {
-    padding: 20px; /* Add padding to the entire product detail section */
-    margin: 100px 30px; /* Add margin around the product detail section */
-    border-radius: 10px; /* Optional: rounded corners for the entire section */
-    background: #fff; /* Optional: background color */
+    padding: 20px;
+    margin: 100px 30px; 
+    border-radius: 10px; 
+    background: #fff; 
 
 }
 .product-layout {
-    display: flex; /* Use flexbox for horizontal layout */
-    gap: 20px; /* Space between carousel and product data */
+    display: flex; 
+    gap: 20px;
     margin: 20px 0;
 }
 
 
 .carousel-box {
-    max-width: 600px; /* Set the maximum width of the carousel */
-    margin: 0 auto; /* Center it horizontally */
-    position: relative; /* Ensure it's contained within this width */
-    padding: 30px;
-    background: white; /* Optional: add background color for contrast */
+    max-width: 600px; 
+    margin: 0 auto; 
+    position: relative; 
+    padding: 0;
+    background: white; 
+    height: 400px; 
     overflow: hidden;
     
 }
@@ -31,75 +32,73 @@ h1{
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    border: 10px solid transparent; /* Border thickness */
-    border-image: linear-gradient(135deg, #006657, #009688) 1; /* Gradient border */
-    border-radius: 15px; /* Rounded corners */
-    z-index: -1; /* Send to back */
-    transition: transform 0.3s ease; /* Transition for hover effect */
+    border: 10px solid transparent;
+    border-image: linear-gradient(135deg, #006657, #009688) 1; 
+    border-radius: 15px;
+    z-index: -1;
+    transition: transform 0.3s ease;
 }
 .product-data {
-    flex: 1; /* Take up remaining space */
+    flex: 1; 
     display: flex;
-    flex-direction: column; /* Stack items vertically */
-    justify-content: center; /* Center vertically */
-    padding: 20px; /* Add padding */
-    border: 1px solid #ccc; /* Optional border */
-    border-radius: 10px; /* Optional rounded corners */
-    background: #f9f9f9; /* Optional light background color */
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    border: 1px solid #ccc; 
+    border-radius: 10px;
+    background: #f9f9f9; 
     
 }
 
-/* Hover effect to create a 'pulse' effect */
 .carousel-box:hover:before {
-    transform: scale(1.05); /* Slightly scale up on hover */
-}
-/* Carousel item images */
-.carousel-box img {
-    width: 100%; /* Ensure images fit the container width */
-    height: 100%; /* Adjust the height as desired */
-    object-fit: cover; /* Maintain image aspect ratio */
+    transform: scale(1.05); 
 }
 
-/* Slick slider adjustments to prevent full width */
+.carousel-box img {
+    width: 100%; 
+    height: auto;
+    max-height: 100%; 
+    object-fit: cover; 
+    object-position: center;
+}
+
 
 
 .slick-list {
-    padding: 0; /* Remove extra padding added by slick */
+    padding: 0; 
 }
 
 .slick-track {
     display: flex;
-    justify-content: center; /* Center the slides if needed */
+    justify-content: center; 
 }
-/* Custom arrow styles */
 .slick-prev,
 .slick-next {
     width: 40px !important;
     height: 40px !important;
     z-index: 1 !important;
-    background-color: transparent !important; /* Make the background transparent */
+    background-color: transparent !important;
     position: absolute !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
     cursor: pointer !important;
-    opacity: 0.75 !important; /* Semi-transparent */
+    opacity: 0.75 !important; 
 }
 
-/* Custom left arrow using your own image */
+
 .slick-prev {
-    left: 10px !important;  /* Adjust distance from the left */
-    background-image: url('../assets/arrow-left.png') !important; /* Use your left chevron image */
-    background-size: contain !important; /* Make sure the image fits the arrow box */
+    left: 10px !important; 
+    background-image: url('../assets/arrow-left.png') !important; 
+    background-size: contain !important; 
     background-repeat: no-repeat !important;
     background-position: center !important;
     border: solid;
 }
 
 
-/* Custom right arrow using your own image */
 .slick-next {
-    right: 10px !important;  /* Adjust distance from the right */
-    background-image: url('../assets/arrow-right.png') !important; /* Use your right chevron image */
+    right: 10px !important;  
+    background-image: url('../assets/arrow-right.png') !important;
     background-size: contain !important;
     background-repeat: no-repeat !important;
     background-position: center !important;
@@ -119,7 +118,6 @@ h1{
 }
 
 
-/* Specific styles for the Add to Cart button */
 .add-to-cart-button {
     position: relative;
     display: flex;
@@ -190,11 +188,31 @@ h1{
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    background: #ccc; /* Grey background for disabled state */
-    color: #666; /* Grey text for disabled state */
+    background: #ccc;
+    color: #666;
     font-family: "Montserrat", sans-serif;
-    cursor: not-allowed; /* Cursor to indicate not allowed */
+    cursor: not-allowed; 
     border: none;
-    padding: 10px 20px; /* Padding for the button */
-    width: 200px; /* Set width to match Add to Cart button */
+    padding: 10px 20px;
+    width: 200px;
 }
+
+
+
+.product-description {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f9fa; /* Light gray background for description */
+    width: 100%;
+    border-top: 1px solid #e9ecef; /* Light border above the description */
+}
+
+
+.original-price {
+    text-decoration: line-through; 
+    color: #999; 
+}
+
+.discounted-price {
+    color: red; 
+    font-weight: bold; }

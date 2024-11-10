@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Cart.css';
@@ -10,11 +8,17 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [tax, setTax] = useState(0);
+  const [transportFee, setTransportFee] = useState(15); // Default transport fee is RM15
   const [total, setTotal] = useState(0);
+  const [voucher, setVoucher] = useState(null); // Store applied voucher
+  const [voucherError, setVoucherError] = useState("");
   const [showPaypal, setShowPaypal] = useState(false);
+  const [showVoucherModal, setShowVoucherModal] = useState(false); // Show modal for voucher selection
+  const [vouchers, setVouchers] = useState([]); // Store available vouchers
 
   useEffect(() => {
-    fetchCartItems(); // Call fetchCartItems on initial load
+    fetchCartItems();
+    fetchVouchers(); 
   }, []);
 
   const fetchCartItems = async () => {
@@ -27,19 +31,36 @@ const Cart = () => {
     }
   };
 
+  const fetchVouchers = async () => {
+    try {
+      const response = await axios.get('http://localhost:8081/voucher_collected');
+      setVouchers(response.data); // Set vouchers
+    } catch (error) {
+      console.error("Error fetching vouchers:", error);
+    }
+  };
+
   const calculateTotals = (items) => {
-    const subTotal = items.reduce((sum, item) => sum + item.ProductPrice * item.quantity, 0);
+    const subTotal = items.reduce((sum, item) => {
+      const price = item.ProductDiscountPrice || item.ProductPrice; // Use discounted price if available
+      return sum + price * item.quantity;
+    }, 0);
+
+    // Apply transport fee condition: free if subtotal is above RM100
+    const transportCost = subTotal > 100 ? 0 : 15;
+    setTransportFee(transportCost);
+
     const taxAmount = subTotal * 0.08; // Example: 8% tax
     setSubtotal(subTotal);
     setTax(taxAmount);
-    setTotal(subTotal + taxAmount);
+    setTotal(subTotal + taxAmount + transportCost); // Include transport fee in total
   };
 
   const handleCheckout = () => {
     if (cartItems.length === 0) {
-        alert("Your cart is empty. Please add items to your cart before checking out.");
-        return;
-      }
+      alert("Your cart is empty. Please add items to your cart before checking out.");
+      return;
+    }
     setShowPaypal(true); // Show PayPal button after clicking Checkout
   };
 
@@ -50,6 +71,7 @@ const Cart = () => {
       const orderResponse = await axios.post('/order', {
         subtotal,
         tax,
+        transportFee, // Include transport fee in the order
         total,
       }, {
         headers: {
@@ -59,24 +81,27 @@ const Cart = () => {
       console.log("Order response:", orderResponse.data);
       const orderId = orderResponse.data.order_id;
       console.log("Created Order ID:", orderId);
+
       // Prepare order items to be sent to the server
-      const orderItemsPromises = cartItems.map(item =>
-        axios.post('/order/item', {
+      const orderItemsPromises = cartItems.map(item => {
+        const price = item.ProductDiscountPrice || item.ProductPrice; // Use discounted price if available
+        return axios.post('/order/item', {
           order_Id: orderId,
           productId: item.ProductID,
           quantity: item.quantity,
-          price: item.ProductPrice,
+          price: price,
           subtotal: subtotal,
         }, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
-        })
-      );
+        });
+      });
 
       // Wait for all order items to be processed
       await Promise.all(orderItemsPromises);
 
+      // Reduce product quantities
       const updateProductPromises = cartItems.map(item =>
         axios.put('/products', {
             productId: item.ProductID,
@@ -86,11 +111,19 @@ const Cart = () => {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
         })
-    );
-    await Promise.all(updateProductPromises);
+      );
+      await Promise.all(updateProductPromises);
 
       // Clear the cart after successful order
       await axios.delete('/cart/item', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      const points = Math.floor(total);
+
+      await axios.put('/users/loyalty', { points }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -121,6 +154,20 @@ const Cart = () => {
     }
   };
 
+  const handleVoucherApply = (voucherCode) => {
+    // Example: Apply voucher code and update total
+    const selectedVoucher = vouchers.find(voucher => voucher.code === voucherCode);
+    if (selectedVoucher) {
+      const discountAmount = selectedVoucher.discount || 0;
+      setVoucher(selectedVoucher);
+      setVoucherError('');
+      setTotal(total - discountAmount); // Apply discount to total
+      setShowVoucherModal(false); // Close modal after selection
+    } else {
+      setVoucherError('Invalid voucher code.');
+    }
+  };
+
   return (
     <div>
       <Nav />
@@ -140,17 +187,27 @@ const Cart = () => {
                 <img src={item.ProductImg} alt={item.ProductName} className="cart-img" />
                 <div className="item-details">
                   <h4>{item.ProductName}</h4>
-                  <p>Fuel Source: Wood Only</p>
                 </div>
               </div>
               <div className="item-price">
-                <p>RM{item.ProductPrice.toFixed(2)}</p>
+                {/* Display discounted price if available, otherwise show regular price */}
+                <p>
+                  {item.ProductDiscountPrice ? (
+                    <>
+                      <span className="discount-price">RM{item.ProductDiscountPrice.toFixed(2)}</span>
+                      <span className="original-price">RM{item.ProductPrice.toFixed(2)}</span>
+                    </>
+                  ) : (
+                    <span>RM{item.ProductPrice.toFixed(2)}</span>
+                  )}
+                </p>
               </div>
               <div className="item-quantity">
                 <p>{item.quantity}</p>
               </div>
               <div className="item-total">
-                <p>RM{(item.ProductPrice * item.quantity).toFixed(2)}</p>
+                {/* Calculate total based on discounted price if available */}
+                <p>RM{((item.ProductDiscountPrice || item.ProductPrice) * item.quantity).toFixed(2)}</p>
               </div>
               <div className="item-action">
                 <button onClick={() => handleDeleteItem(item.ProductID)} className="delete-btn">
@@ -171,34 +228,63 @@ const Cart = () => {
               <span className="amount">RM{tax.toFixed(2)}</span>
             </div>
             <div className="total-item">
-              <span><strong>Total:</strong></span>
-              <span className="amount"><strong>RM{total.toFixed(2)}</strong></span>
+              <span>Transportation Fee :</span>
+              <span className="amount">RM{transportFee.toFixed(2)}</span>
             </div>
+
+            <div>
+              <button className="apply-voucher-button" onClick={() => setShowVoucherModal(true)}>Apply Voucher</button>
+              {voucher && <div className="voucher-applied">Voucher Applied: {voucher.voucher_name}</div>}
+              {voucherError && <div className="voucher-error">{voucherError}</div>}
+            </div>
+
+            <div className="total-item">
+              <span>Total :</span>
+              <span className="amount">RM{total.toFixed(2)}</span>
+            </div>
+
             {!showPaypal && (
-              <button className="checkout-btn" onClick={handleCheckout}>Checkout</button>
-            )}
-            {showPaypal && (
-              <PayPalScriptProvider options={{ "client-id": "ASXoIbPip1ZFLER1z1KmhlpsN9xJGhjG4OAfGgBGGzU532mun3jpqRMlh6ZxlvDqur2KJyL2UNdSvJP8", "currency": "MYR" }}>
-                <PayPalButtons
-                  createOrder={(data, actions) => {
-                    return actions.order.create({
-                      purchase_units: [
-                        {
-                          amount: {
-                            value: total.toFixed(2),
-                          },
-                        },
-                      ],
-                    });
-                  }}
-                  onApprove={(data, actions) => {
-                    return actions.order.capture().then(handlePaymentSuccess);
-                  }}
-                />
-              </PayPalScriptProvider>
+              <button className="checkout-btn" onClick={handleCheckout}>
+                Checkout
+              </button>
             )}
           </div>
         </div>
+
+        {/* Modal for voucher selection */}
+        {showVoucherModal && (
+          <div className="voucher-modal">
+            <div className="modal-content">
+              <h3>Select a Voucher</h3>
+              <ul className="voucher-list">
+                {vouchers.map((voucher) => (
+                  <li key={voucher.code} onClick={() => handleVoucherApply(voucher.code)}>
+                    {voucher.code} - Discount: RM{voucher.discount}
+                  </li>
+                ))}
+              </ul>
+              <button className="close-modal" onClick={() => setShowVoucherModal(false)}>Close</button>
+            </div>
+          </div>
+        )}
+
+        {showPaypal && (
+          <PayPalScriptProvider options={{ "client-id": "sb" }}>
+            <PayPalButtons
+              style={{ layout: "vertical" }}
+              createOrder={(data, actions) => {
+                return actions.order.create({
+                  purchase_units: [{
+                    amount: {
+                      value: total.toFixed(2),
+                    },
+                  }],
+                });
+              }}
+              onApprove={handlePaymentSuccess}
+            />
+          </PayPalScriptProvider>
+        )}
       </div>
     </div>
   );

@@ -24,17 +24,23 @@ const AdminNav = () => {
         <li className={`nav-item ${isActive('/admin/product')}`}>
           <Link to="/admin/product">Product</Link>
         </li>
-        <li className={`nav-item ${isActive('/admin/news')}`}>
-          <Link to="/admin/news">News</Link>
+        <li className={`nav-item ${isActive('/admin/new')}`}>
+          <Link to="/admin/new">News</Link>
         </li>
-        <li className={`nav-item ${isActive('/admin/users')}`}>
-          <Link to="/admin/users">Users</Link>
+        <li className={`nav-item ${isActive('/admin/userlist')}`}>
+          <Link to="/admin/userlist">Users</Link>
         </li>
         <li className={`nav-item ${isActive('/admin/orders')}`}>
           <Link to="/admin/orders">Orders</Link>
         </li>
         <li className={`nav-item ${isActive('/admin/feedbacks')}`}>
           <Link to="/admin/feedbacks">Feedbacks</Link>
+        </li>
+        <li className={`nav-item ${isActive('/admin/list')}`}>
+          <Link to="/admin/list">Admin List</Link>
+        </li>
+        <li className={`nav-item ${isActive('/admin/vouchers')}`}>
+          <Link to="/admin/vouchers">Vouchers</Link>
         </li>
       </ul>
     </div>

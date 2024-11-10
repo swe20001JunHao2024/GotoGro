@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import AdminNav from '../../AdminNav'; // Reuse the AdminNav for sidebar
 import './UploadProduct.css'; // Import the CSS file for styling
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const UploadProduct = () => {
     const [productName, setProductName] = useState('');
@@ -16,10 +16,11 @@ const UploadProduct = () => {
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState('');
     const [imagePreviews, setImagePreviews] = useState([]); // State to hold image previews
+    const navigate = useNavigate(); // Initialize navigate
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
-        setSelectedFiles(files); // Multiple files selected
+        setSelectedFiles(files); 
 
         // Create image preview URLs
         const previews = files.map(file => URL.createObjectURL(file));
@@ -60,12 +61,13 @@ const UploadProduct = () => {
             setSelectedFiles([]);
             setImagePreviews([]);
             
-            // Set success message
+            // Set success message and clear after a few seconds
             setSuccessMessage('Product uploaded successfully!');
             setError(null);
+            setTimeout(() => setSuccessMessage(''), 3000); // Clear success message after 3 seconds
 
-            // Scroll to the top of the page
-            navigate(`/admin/product/view/${productId}`);
+            
+            navigate(`/admin/uploadproduct`);
         } catch (error) {
             console.error('Error uploading product:', error);
             setError('Failed to upload product. Please try again.');
@@ -79,7 +81,9 @@ const UploadProduct = () => {
             <div className="upload-product-page">
                 <h2>Upload New Product</h2>
                 {error && <p className="error-message">{error}</p>}
-                {successMessage && <p className="success-message">{successMessage}</p>}
+                {successMessage && (
+                    <p className="success-message">{successMessage}</p>
+                )}
                 <form onSubmit={handleSubmit} className="upload-form">
                     <label>Product Name:</label>
                     <input

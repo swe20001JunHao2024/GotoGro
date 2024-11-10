@@ -18,8 +18,9 @@ import Cart from './Cart/Cart.jsx'
 import UserOrderHistory from './UserOrderHistory/UserOrderHistory.jsx'
 import UserOrderHistoryItem from './UserOrderHistory/UserOrderHistoryItem.jsx'
 import ReviewForm from './Review/ReviewForm.jsx';
-import AddNews from './AdminPanel/UploadNews/AddNews.jsx'
+import AddNews from './AdminPanel/AdminNews/UploadNews/AddNews.jsx'
 import ReviewTest from './Review/ReviewTest.jsx';
+import AboutUs from './About/AboutUs.jsx'
 
 import AdminRoute from './AdminRoute.jsx';
 import AdminDashboard from './AdminPanel/AdminPage/AdminPage.jsx'
@@ -27,7 +28,19 @@ import AdminLogin from './AdminPanel/AdminLogin.jsx'
 import AdminUpdateProduct from './AdminPanel/AdminProduct/UpdateProduct/UpdateProduct.jsx'
 import AdminProduct from './AdminPanel/AdminProduct/AdminProduct.jsx'
 import AdminProductView from './AdminPanel/AdminProduct/AdminIndividualProduct/AdminProductView.jsx'
-
+import AdminNews from './AdminPanel/AdminNews/AdminNews.jsx'
+import AdminNewsView from './AdminPanel/AdminNews/AdminNewsView/AdminNewsView.jsx'
+import AdminEditNews from './AdminPanel/AdminNews/AdminEditNews/AdminEditNews.jsx'
+import AdminUsers from './AdminPanel/AdminUsers/AdminUsers.jsx'
+import AdminUserOrders from './AdminPanel/AdminUserOrders/AdminUserOrders.jsx';
+import AdminUserOrderItems from './AdminPanel/AdminUserOrders/AdminUserOrderItems.jsx'
+import AdminReviews from './AdminPanel/AdminReviews/AdminReview.jsx'
+import AdminList from './AdminPanel/AdminList/AdminList.jsx'
+import AdminAdd from './AdminPanel/AdminList/AddAdmin/AddAdmin.jsx'
+import AdminVouchers from './AdminPanel/AdminVouchers/AdminVouchers.jsx';
+import AdminAddVouchers from './AdminPanel/AdminVouchers/AdminAddVouchers/AdminAddVoucers.jsx';
+import AdminEditVouchers from './AdminPanel/AdminVouchers/AdminEditVouchers/AdminEditVouchers.jsx'
+import AdminViewVouchers from './AdminPanel/AdminVouchers/AdminViewVouchers/AdminViewVouchers.jsx'
 
 
 
@@ -44,15 +57,15 @@ root.render(
           <Route path="/signup" element={<Signup />} /> 
           <Route path="/login" element={<Login />} /> 
           <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} /> 
-          <Route path="/updateProfile" element={<UpdateProfile />}/>
-          <Route path="/product" element={<ProductPage/>}/>
-          <Route path="/product/:id" element={<IndividualProduct />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route path="/updateProfile" element={<ProtectedRoute><UpdateProfile /></ProtectedRoute>}/>
+          <Route path="/product" element={<ProtectedRoute><ProductPage/></ProtectedRoute>}/>
+          <Route path="/product/:id" element={<ProtectedRoute><IndividualProduct /></ProtectedRoute> }/>
+          <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
           <Route path="/userOrderHistory" element={<UserOrderHistory />} />
-          <Route path="/userOrderHistory/:orderId" element={<UserOrderHistoryItem />} />
-          <Route path="/review" element={<ReviewForm />} />
-          <Route path="/addNews" element={<AddNews />} />
-          <Route path="/rev" element={<ReviewTest/>} />
+          <Route path="/userOrderHistory/:orderId" element={<ProtectedRoute><UserOrderHistoryItem /></ProtectedRoute>} />
+          <Route path="/review" element={<ProtectedRoute><ReviewForm /></ProtectedRoute>} />
+          <Route path="/aboutus" element={<AboutUs />} />
+
           
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
@@ -60,6 +73,25 @@ root.render(
           <Route path="/admin/product/edit/:id" element={<AdminRoute><AdminUpdateProduct /></AdminRoute>}/>
           <Route path="/admin/uploadproduct" element={<AdminRoute><UploadProduct/></AdminRoute>}/>
           <Route path="/admin/product/view/:productId" element={<AdminRoute><AdminProductView /></AdminRoute>} />
+          <Route path="/admin/new" element={<AdminRoute><AdminNews /></AdminRoute>} />
+          <Route path="/admin/addNews" element={<AdminRoute><AddNews /></AdminRoute>} />
+          <Route path="/admin/new/view/:news_id" element={<AdminRoute><AdminNewsView /></AdminRoute>} />
+          <Route path="/admin/new/edit/:news_id" element={<AdminRoute><AdminEditNews /></AdminRoute>}/>
+          <Route path="/admin/userlist" element={<AdminRoute><AdminUsers /></AdminRoute>} />
+          <Route path="/admin/orders" element={<AdminRoute><AdminUserOrders /></AdminRoute>} />
+          <Route path="/admin/orders/view/:orderId" element={<AdminRoute><AdminUserOrderItems /></AdminRoute>} />
+          <Route path="/admin/feedbacks" element={<AdminRoute><AdminReviews /></AdminRoute>} />
+          <Route path="/admin/list" element={<AdminRoute><AdminList/></AdminRoute>} />
+          <Route path="/admin/addAdmin" element={<AdminRoute><AdminAdd/></AdminRoute>} />
+          <Route path="/admin/vouchers" element={<AdminRoute><AdminVouchers/></AdminRoute>} />
+          <Route path="/admin/addvouchers" element={<AdminRoute><AdminAddVouchers/></AdminRoute>} />
+          <Route path="/admin/vouchers/edit/:voucher_id" element={<AdminRoute><AdminEditVouchers /></AdminRoute>}/>
+          <Route path="/admin/vouchers/view/:voucher_id" element={<AdminRoute><AdminViewVouchers /></AdminRoute>}/>
+
+
+
+
+
         </Routes>
       </Router>
     </AuthProvider>

@@ -18,13 +18,12 @@ function Signup() {
 
     axios.post('http://localhost:8081/signup', { username, email, UserHP, password })
       .then(res => {
-        // Redirect to home page if signup is successful
-        navigate('/home');
+        navigate('/login');
 
       })
       .catch(err => {
         if (err.response && err.response.data && err.response.data.error) {
-          setError(err.response.data.error); // Show the error message from backend
+          setError(err.response.data.error); 
         } else {
           setError('An error occurred during signup. Please try again.');
         }

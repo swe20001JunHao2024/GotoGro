@@ -1,0 +1,29 @@
+.add-admin{
+    margin-left: 250px; 
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.addadmin-page{
+    background-color: #f5f5f5; 
+    min-height: 100vh;
+}
+
+.error-message {
+    position: fixed; 
+    top: 10px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    background-color: #f44336; /* Red background */
+    color: white; 
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+    opacity: 1; 
+}
+
+.error-message.hide {
+    opacity: 0; 
+}

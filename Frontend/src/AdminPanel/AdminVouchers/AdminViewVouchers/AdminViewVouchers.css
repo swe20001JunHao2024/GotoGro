@@ -1,0 +1,90 @@
+/* General layout */
+.admin-voucher-view-page {
+    display: flex;
+    height: 100vh; /* Full viewport height */
+}
+
+.admin-voucher-view {
+    margin-left: 250px; /* Sidebar width */
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f5f5f5; /* Content background */
+    overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+.header-title {
+    margin-bottom: 20px;
+    color: #02391e;
+}
+
+/* Voucher Info Section */
+.voucher-info {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for voucher info box */
+}
+
+.voucher-info h3 {
+    color: #333;
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.voucher-info p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #555;
+}
+
+.voucher-info p strong {
+    color: #333;
+}
+
+/* Edit Button Styling */
+.edit-button {
+    padding: 10px 20px;
+    background-color: #4caf50; /* Button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition */
+    margin-top: 20px;
+    display: inline-block;
+    text-align: center;
+}
+
+.edit-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+.admin-buttons {
+    margin: 30px 0;
+}
+
+/* Section Heading */
+h5 {
+    color: #333;
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 24px;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+    .admin-voucher-view-page {
+        flex-direction: column; /* Stack sidebar and content */
+    }
+
+    .admin-voucher-view {
+        margin-left: 0; /* Remove margin for smaller screens */
+        padding: 10px; /* Reduce padding */
+    }
+
+    .voucher-info {
+        padding: 15px; /* Reduce padding for smaller screens */
+    }
+}

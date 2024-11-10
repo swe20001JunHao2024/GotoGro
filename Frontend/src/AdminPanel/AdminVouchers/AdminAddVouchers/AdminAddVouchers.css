@@ -1,0 +1,93 @@
+.admin-voucher-page {
+    display: flex;
+    height: 100%;
+}
+
+.add-voucher-page {
+    flex: 1;
+    height: 100%;
+    padding: 20px;
+    background-color: #f4f4f9;
+    margin-left: 250px;
+}
+
+.add-voucher-page h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.add-voucher-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-voucher-form label {
+    font-size: 16px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.add-voucher-form input,
+.add-voucher-form textarea,
+.add-voucher-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.add-voucher-form textarea {
+    resize: vertical;
+}
+
+.add-voucher-button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.add-voucher-button:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 10px;
+}
+
+.success-message {
+    color: green;
+    margin-bottom: 10px;
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+    opacity: 1;
+}
+
+.success-message.hide {
+    opacity: 0;
+}
+
+@media (max-width: 600px) {
+    .add-voucher-button {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
