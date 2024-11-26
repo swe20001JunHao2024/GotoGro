@@ -53,8 +53,16 @@ const Cart = () => {
     const taxAmount = subTotal * 0.08; // Example: 8% tax
     setSubtotal(subTotal);
     setTax(taxAmount);
-    setTotal(subTotal + taxAmount + transportCost); // Include transport fee in total
-  };
+    let discount = 0;
+    if (voucher) {
+      discount = voucher.voucher_type === 'Percentage'
+        ? Math.min((subTotal * (voucher.voucher_amount / 100)), voucher.voucher_max_disc || subTotal)
+        : voucher.voucher_amount;
+    }
+
+    // Update the total to reflect discount
+    setTotal(subTotal + taxAmount + transportCost - discount); // Include transport fee in total
+    };
 
   const handleCheckout = () => {
     if (cartItems.length === 0) {
@@ -155,14 +163,14 @@ const Cart = () => {
   };
 
   const handleVoucherApply = (voucherCode) => {
-    // Example: Apply voucher code and update total
-    const selectedVoucher = vouchers.find(voucher => voucher.code === voucherCode);
+    const selectedVoucher = vouchers.find(voucher => voucher.voucher_name === voucherCode);
     if (selectedVoucher) {
-      const discountAmount = selectedVoucher.discount || 0;
       setVoucher(selectedVoucher);
       setVoucherError('');
-      setTotal(total - discountAmount); // Apply discount to total
       setShowVoucherModal(false); // Close modal after selection
+  
+      // Recalculate totals with the new voucher applied
+      calculateTotals(cartItems);
     } else {
       setVoucherError('Invalid voucher code.');
     }
@@ -232,10 +240,20 @@ const Cart = () => {
               <span className="amount">RM{transportFee.toFixed(2)}</span>
             </div>
 
-            <div>
+            
+
+            <div className="voucher-section">
               <button className="apply-voucher-button" onClick={() => setShowVoucherModal(true)}>Apply Voucher</button>
               {voucher && <div className="voucher-applied">Voucher Applied: {voucher.voucher_name}</div>}
               {voucherError && <div className="voucher-error">{voucherError}</div>}
+            </div>
+            <div className="total-item">
+              <span>Discount :</span>
+              <span className="amount">
+                -RM{voucher ? (voucher.voucher_type === 'Percentage'
+                  ? Math.min((subtotal * (voucher.voucher_amount / 100)), voucher.voucher_max_disc || subtotal).toFixed(2)
+                  : voucher.voucher_amount.toFixed(2)) : '0.00'}
+              </span>
             </div>
 
             <div className="total-item">
@@ -251,6 +269,8 @@ const Cart = () => {
           </div>
         </div>
 
+
+        {/* Modal for voucher selection */}
         {/* Modal for voucher selection */}
         {showVoucherModal && (
           <div className="voucher-modal">
@@ -258,8 +278,10 @@ const Cart = () => {
               <h3>Select a Voucher</h3>
               <ul className="voucher-list">
                 {vouchers.map((voucher) => (
-                  <li key={voucher.code} onClick={() => handleVoucherApply(voucher.code)}>
-                    {voucher.code} - Discount: RM{voucher.discount}
+                  <li key={voucher.voucher_name} onClick={() => handleVoucherApply(voucher.voucher_name)}>
+                    {voucher.voucher_name} - Discount: {voucher.voucher_type === 'Percentage' 
+                      ? `${voucher.voucher_amount}%` 
+                      : `RM${voucher.voucher_amount}`}
                   </li>
                 ))}
               </ul>

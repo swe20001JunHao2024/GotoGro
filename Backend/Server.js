@@ -182,6 +182,34 @@ app.post('/logins', (req, res) => {
         });
     });
 });
+
+app.post('/forgot-password', async (req, res) => {
+    const { email, username, newPassword } = req.body;
+    const hashedPassword = await bcrypt.hash(newPassword, 10); // Hash the new password
+  
+    db.query(
+      'SELECT * FROM user WHERE UserEmail = ? AND Username = ?',
+      [email, username],
+      (error, results) => {
+        if (error) return res.status(500).json({ error: 'Database error' });
+  
+        if (results.length === 0) {
+          return res.status(400).json({ error: 'Invalid email or username' });
+        }
+  
+        // Update password
+        db.query(
+          'UPDATE user SET password = ? WHERE UserEmail = ? AND Username = ?',
+          [hashedPassword, email, username],
+          (updateError) => {
+            if (updateError) return res.status(500).json({ error: 'Password update failed' });
+            res.json({ message: 'Password reset successful' });
+          }
+        );
+      }
+    );
+  });
+
 //reset password
 app.put('/resetPassword', verify, (req, res) => {
     const { oldPassword, newPassword } = req.body;
@@ -264,7 +292,7 @@ app.get('/profile', verify, (req, res) => {
     }
 
     // Fetch user data based on req.user.id
-    const query = 'SELECT UserID, Username, UserEmail, UserHP, UserPP, Add_l1, Add_l2, Postcode, State FROM user WHERE UserID = ?';
+    const query = 'SELECT UserID, Username, UserEmail, UserHP, UserPP, Add_l1, Add_l2, Postcode, State, loyalty_points FROM user WHERE UserID = ?';
     db.query(query, [req.user.id], (err, results) => {
         if (err) {
             return res.status(500).json({ message: 'Database error' });
@@ -1082,12 +1110,98 @@ app.get('/voucher_collected', verify, (req, res) => {
     });
   });
 
+app.post('/update-voucher-quantity', (req, res) => {
+    const { voucher_id } = req.body;
+  
+    if (!voucher_id) {
+      return res.status(400).json({ message: "Voucher ID is required." });
+    }
+  
+    // Get the voucher data to check the voucher quantity
+    db.query('SELECT * FROM voucher WHERE voucher_id = ?', [voucher_id], (err, results) => {
+      if (err) {
+        return res.status(500).json({ message: "Error fetching voucher", error: err });
+      }
+  
+      if (results.length === 0) {
+        return res.status(404).json({ message: "Voucher not found" });
+      }
+  
+      const voucher = results[0];
+  
+      // Check if voucher has enough quantity
+      if (voucher.voucher_quantity <= 0) {
+        return res.status(400).json({ message: "Voucher is out of stock." });
+      }
+  
+      // Deduct 1 from voucher quantity
+      const updatedQuantity = voucher.voucher_quantity - 1;
+  
+      // Update the voucher quantity in the voucher table
+      db.query(
+        'UPDATE voucher SET voucher_quantity = ? WHERE voucher_id = ?',
+        [updatedQuantity, voucher_id],
+        (err, results) => {
+          if (err) {
+            return res.status(500).json({ message: "Error updating voucher quantity", error: err });
+          }
+  
+          res.status(200).json({ message: "Voucher quantity updated successfully!" });
+        }
+      );
+    });
+  });
 
 
+app.post('/redeem-voucher',verify, (req, res) => {
+    const { voucher_id} = req.body;
+    const userId = req.user.id;
+  
+    if (!voucher_id || !userId) {
+      return res.status(400).json({ message: "Voucher ID and User ID are required." });
+    }
+  
+    db.query(
+      'INSERT INTO voucher_collected (voucher_id, UserID, collected_at) VALUES (?, ?, NOW())',
+      [voucher_id, userId],
+      (err, results) => {
+        if (err) {
+          return res.status(500).json({ message: "Error inserting into voucher_collected", error: err });
+        }
+  
+        res.status(200).json({ message: "Voucher redeemed successfully!" });
+      }
+    );
+  });
 
+  app.post('/validate-password', verify, (req, res) => {
+    const {password} = req.body;
+    const userId = req.user.id;
 
+    const fetchPasswordSql = 'SELECT password FROM user WHERE UserID = ?';
 
+    db.query(fetchPasswordSql, [userId], (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database query error' });
 
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const storedPassword = results[0].password;
+
+        // Compare the entered password with the stored password using bcrypt
+        bcrypt.compare(password, storedPassword, (err, isMatch) => {
+            if (err) return res.status(500).json({ error: 'Error comparing passwords' });
+
+            if (!isMatch) {
+                return res.status(400).json({ error: 'Incorrect password. Please try again.' });
+            }
+
+            // If passwords match, send a success response
+            res.status(200).json({ message: 'Password validated successfully' });
+        });
+    });
+});
 
 
 
@@ -1587,6 +1701,136 @@ app.put('/admindash/voucher/:voucher_id', (req, res) => {
         }
     );
 });
+
+const verifyAdminToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    console.log('Authorization Header:', authHeader);
+  
+    if (authHeader) {
+      const accessToken = authHeader.split(' ')[1]; // Extract token
+      console.log('Token:', accessToken);
+  
+      jwt.verify(accessToken, SECRET_KEY, (err, admin) => {
+        if (err) {
+          console.error('Token verification error:', err);
+          return res.status(403).json({ message: 'Invalid token' });
+        }
+  
+        req.admin = admin; // Attach the decoded admin info
+        console.log('Decoded Admin:', req.admin); // Log decoded admin data
+        next(); // Proceed to next middleware or route
+      });
+    } else {
+      console.log('No Authorization header present');
+      res.status(401).json({ message: 'You are not authenticated' });
+    }
+  };
+  
+
+app.get('/admindash/profile', verifyAdminToken, async (req, res) => {
+    try {
+      const adminId = req.admin.id; // Corrected field name here
+      console.log('Admin ID from JWT:', adminId); // Debugging
+  
+      // Corrected the query to use the correct field (id)
+      const query = 'SELECT * FROM admin WHERE admin_id = ?'; // Use id, not admin_id
+      console.log('Executing query:', query, 'with admin_id:', adminId); // Debugging
+  
+      db.query(query, [adminId], (err, result) => {
+        if (err) {
+          console.error('Error fetching profile data:', err);
+          return res.status(500).json({ message: 'Error fetching profile data' });
+        }
+  
+        if (result.length === 0) {
+          console.log('No admin found with id:', adminId); // Debugging
+          return res.status(404).json({ message: 'Admin not found' });
+        }
+  
+        res.json(result[0]); // Send the profile data
+      });
+    } catch (error) {
+      console.error('Server error:', error); // Debugging
+      res.status(500).json({ message: 'Server error' });
+    }
+ });
+  
+ app.put('/admindash/profile', verifyAdminToken, async (req, res) => {
+    try {
+      const { admin_name, admin_email, admin_hp, admin_role } = req.body; // Get fields to update from request body
+  
+      // Validate that the required fields are present (optional)
+      if (!admin_name || !admin_email || !admin_hp || !admin_role) {
+        return res.status(400).json({ message: 'All fields are required' });
+      }
+  
+      const adminId = req.admin.id; // Admin ID from the JWT
+  
+      // SQL query to update the admin profile in the database
+      const query = `
+        UPDATE admin
+        SET admin_name = ?, admin_email = ?, admin_hp = ?, admin_role = ?
+        WHERE admin_id = ?
+      `;
+  
+      // Execute the query to update the admin profile
+      db.query(query, [admin_name, admin_email, admin_hp, admin_role, adminId], (err, result) => {
+        if (err) {
+          return res.status(500).json({ message: 'Error updating profile' });
+        }
+  
+        if (result.affectedRows === 0) {
+          return res.status(404).json({ message: 'Admin not found' });
+        }
+  
+        res.status(200).json({ message: 'Profile updated successfully' });
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  
+app.get('/admindash/sales-report', (req, res) => {
+    const { filter, startDate, endDate } = req.query;
+
+    // Validate required parameters
+    if (!filter || (filter === 'range' && (!startDate || !endDate))) {
+        return res.status(400).json({ error: "Invalid or missing query parameters." });
+    }
+
+    let query;
+    if (filter === 'range') {
+        // SQL query with the updated fields: subtotal, tax, and revenue
+        query = `SELECT DATE_FORMAT(order_date, '%Y-%m-%d') AS period, 
+                        SUM(subtotal) AS subtotal,
+                        SUM(tax) AS tax,
+                        SUM(total_price) AS revenue 
+                 FROM \`order\` 
+                 WHERE order_status = 'Completed' 
+                   AND order_date BETWEEN ? AND ? 
+                 GROUP BY period 
+                 ORDER BY period DESC`;
+
+        //console.log("Constructed Query:", query); // Log the query for debugging
+    }
+
+    // Execute the query using the callback function
+    db.query(query, [startDate, endDate], (err, results) => {
+        if (err) {
+            console.error("Error occurred:", err.message);
+            return res.status(500).json({ error: err.message });
+        }
+
+        // Send the results as JSON
+        res.json(results);
+    });
+});
+
+
+
+
 
 
 

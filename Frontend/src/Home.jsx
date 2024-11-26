@@ -9,6 +9,7 @@ import MonthlyNews from './HomeElement/MonthlyNews.jsx';
 import Service from './HomeElement/Services.jsx'
 import Footer from './Footer/Footer.jsx'
 import Brands from './HomeElement/Brands.jsx'
+import ReviewForm from './Review/ReviewForm.jsx';
 
 function Home() {
   const { logout } = useContext(AuthContext);
@@ -38,6 +39,7 @@ function Home() {
         <MonthlyNews/>
         <Service/>
         <Reviews/>
+        <ReviewForm/>
         <Brands/>
         <Footer/>
     </div>

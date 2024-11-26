@@ -51,20 +51,21 @@ const AdminReview = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {lowRatedReviews.length > 0 ? (
-                            lowRatedReviews.map(review => (
-                                <tr key={review.review_id}>
-                                    <td>{review.UserID}</td>
-                                    <td>{review.user_name}</td>
-                                    <td>{review.rating}</td>
-                                    <td>{review.review}</td>
-                                    <td>{new Date(review.created_at).toLocaleDateString()}</td>
-                                </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="5">No feedback available.</td>
+                        {salesData.length > 0 ? (
+                        salesData.map((sale, index) => (
+                            <tr key={index}>
+                            <td>{sale.period}</td>
+                            <td>{sale.revenue}</td>
+                            <td>{sale.tax}</td>
+                            <td>{sale.subtotal}</td>
                             </tr>
+                        ))
+                        ) : (
+                        <tr>
+                            <td colSpan="4" className="no-data-message">
+                            No sales data available for the selected date range.
+                            </td>
+                        </tr>
                         )}
                     </tbody>
                 </table>

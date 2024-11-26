@@ -78,8 +78,8 @@ const Nav = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/review" className={({ isActive }) => isActive ? "link active" : "link"}>
-            Review
+          <NavLink to="/voucher" className={({ isActive }) => isActive ? "link active" : "link"}>
+            Voucher
           </NavLink>
         </li>
       </ul>

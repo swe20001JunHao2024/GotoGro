@@ -114,6 +114,7 @@ thead th {
 tbody td {
     padding: 10px;
     border-bottom: 1px solid #ddd;
+    text-decoration: none;
 }
 
 .details-button {

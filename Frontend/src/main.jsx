@@ -19,8 +19,8 @@ import UserOrderHistory from './UserOrderHistory/UserOrderHistory.jsx'
 import UserOrderHistoryItem from './UserOrderHistory/UserOrderHistoryItem.jsx'
 import ReviewForm from './Review/ReviewForm.jsx';
 import AddNews from './AdminPanel/AdminNews/UploadNews/AddNews.jsx'
-import ReviewTest from './Review/ReviewTest.jsx';
 import AboutUs from './About/AboutUs.jsx'
+import Voucher from './VoucherPage/Voucher.jsx'
 
 import AdminRoute from './AdminRoute.jsx';
 import AdminDashboard from './AdminPanel/AdminPage/AdminPage.jsx'
@@ -41,7 +41,9 @@ import AdminVouchers from './AdminPanel/AdminVouchers/AdminVouchers.jsx';
 import AdminAddVouchers from './AdminPanel/AdminVouchers/AdminAddVouchers/AdminAddVoucers.jsx';
 import AdminEditVouchers from './AdminPanel/AdminVouchers/AdminEditVouchers/AdminEditVouchers.jsx'
 import AdminViewVouchers from './AdminPanel/AdminVouchers/AdminViewVouchers/AdminViewVouchers.jsx'
-
+import AdminProfile from './AdminPanel/AdminProfile.jsx'
+import AdminProfileEdit from './AdminPanel/AdminEditProfile.jsx'
+import AdminSalesReport from './AdminPanel/AdminSalesReport/AdminSalesReport.jsx'
 
 
 const rootElement = document.getElementById('root');
@@ -63,7 +65,7 @@ root.render(
           <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
           <Route path="/userOrderHistory" element={<UserOrderHistory />} />
           <Route path="/userOrderHistory/:orderId" element={<ProtectedRoute><UserOrderHistoryItem /></ProtectedRoute>} />
-          <Route path="/review" element={<ProtectedRoute><ReviewForm /></ProtectedRoute>} />
+          <Route path="/voucher" element={<ProtectedRoute><Voucher /></ProtectedRoute>} />
           <Route path="/aboutus" element={<AboutUs />} />
 
           
@@ -87,7 +89,9 @@ root.render(
           <Route path="/admin/addvouchers" element={<AdminRoute><AdminAddVouchers/></AdminRoute>} />
           <Route path="/admin/vouchers/edit/:voucher_id" element={<AdminRoute><AdminEditVouchers /></AdminRoute>}/>
           <Route path="/admin/vouchers/view/:voucher_id" element={<AdminRoute><AdminViewVouchers /></AdminRoute>}/>
-
+          <Route path="/admin/adminprofile" element={<AdminRoute><AdminProfile/></AdminRoute>} />
+          <Route path="/admin/adminprofile/edit" element={<AdminRoute><AdminProfileEdit/></AdminRoute>} />
+          <Route path="/admin/sales-report" element={<AdminRoute><AdminSalesReport/></AdminRoute>} />
 
 
 

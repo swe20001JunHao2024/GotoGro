@@ -42,6 +42,12 @@ const AdminNav = () => {
         <li className={`nav-item ${isActive('/admin/vouchers')}`}>
           <Link to="/admin/vouchers">Vouchers</Link>
         </li>
+        <li className={`nav-item ${isActive('/admin/adminprofile')}`}>
+          <Link to="/admin/adminprofile">Profile</Link>
+        </li>
+        <li className={`nav-item ${isActive('/admin/sales-report')}`}>
+          <Link to="/admin/sales-report">Sales Report</Link>
+        </li>
       </ul>
     </div>
   );
